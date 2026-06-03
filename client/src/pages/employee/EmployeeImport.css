@@ -1,0 +1,42 @@
+.employee-import-modal .upload-step {
+  padding: 20px 0;
+}
+
+.employee-import-modal .validation-step {
+  padding: 20px 0;
+}
+
+.employee-import-modal .import-results {
+  padding: 20px 0;
+}
+
+.employee-import-modal .invalid-row {
+  background-color: #fff2f0;
+}
+
+.employee-import-modal .ant-upload-drag {
+  border: 2px dashed #d9d9d9;
+  border-radius: 8px;
+  background: #fafafa;
+  transition: all 0.3s;
+}
+
+.employee-import-modal .ant-upload-drag:hover {
+  border-color: #1890ff;
+}
+
+.employee-import-modal .ant-table-small {
+  font-size: 12px;
+}
+
+.employee-import-modal .ant-alert {
+  border-radius: 8px;
+}
+
+
+
+
+
+
+
+

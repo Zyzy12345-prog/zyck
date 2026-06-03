@@ -1,0 +1,40 @@
+.customer-leads-page {
+  padding: 24px;
+  background: #f0f2f5;
+  min-height: 100vh;
+}
+
+.customer-leads-page .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.customer-leads-page .ant-statistic-title {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.customer-leads-page .ant-statistic-content {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.customer-leads-page .ant-table-wrapper {
+  margin-top: 16px;
+}
+
+.customer-leads-page .ant-tag {
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+
+
+
+
+
+
+
+
+
+

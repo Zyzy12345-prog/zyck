@@ -1,0 +1,125 @@
+.upload-step {
+  padding: 20px 0;
+}
+
+.mapping-step {
+  padding: 20px 0;
+}
+
+.mapping-step h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #262626;
+  margin-bottom: 16px;
+}
+
+.mapping-step .ant-table {
+  margin-bottom: 24px;
+}
+
+.mapping-step .ant-table-thead > tr > th {
+  background: #fafafa;
+  font-weight: 600;
+  text-align: center;
+}
+
+.mapping-step .ant-table-tbody > tr > td {
+  vertical-align: middle;
+}
+
+.mapping-item {
+  margin-bottom: 16px;
+}
+
+.mapping-item label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.preview-step {
+  padding: 20px 0;
+}
+
+.preview-step .error-row {
+  background-color: #fff2f0;
+}
+
+.preview-step .error-row:hover {
+  background-color: #ffe7e6 !important;
+}
+
+.preview-step .ant-table-tbody > tr.error-row > td {
+  border-bottom: 1px solid #ffccc7;
+}
+
+.importing-step {
+  padding: 20px 0;
+}
+
+.result-step {
+  padding: 20px 0;
+}
+
+.result-step .ant-result {
+  padding: 24px 0;
+}
+
+.result-step .ant-statistic-content {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+/* 统计卡片动画 */
+.result-step .ant-col > div {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.result-step .ant-col > div:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.step-content {
+  min-height: 400px;
+}
+
+/* 上传区域样式 */
+.ant-upload-drag {
+  border: 2px dashed #d9d9d9;
+  border-radius: 8px;
+  background: #fafafa;
+  transition: all 0.3s;
+}
+
+.ant-upload-drag:hover {
+  border-color: #1890ff;
+  background: #f0f7ff;
+}
+
+.ant-upload-drag-icon {
+  font-size: 48px;
+  color: #1890ff;
+}
+
+/* 步骤样式 */
+.ant-steps-item-finish .ant-steps-item-icon {
+  background-color: #52c41a;
+  border-color: #52c41a;
+}
+
+.ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+  color: #fff;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .mapping-item {
+    margin-bottom: 12px;
+  }
+
+  .step-content {
+    min-height: 300px;
+  }
+}
+

@@ -1,0 +1,36 @@
+.employee-form-container {
+  padding: 24px;
+  background: #f0f2f5;
+  min-height: 100vh;
+}
+
+.employee-form-container .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.employee-form-container .ant-divider-horizontal.ant-divider-with-text-left {
+  margin: 24px 0 16px;
+}
+
+.employee-form-container .ant-divider-horizontal.ant-divider-with-text-left::before {
+  width: 5%;
+}
+
+.employee-form-container .ant-form-item {
+  margin-bottom: 16px;
+}
+
+.employee-form-container .ant-form-item-label > label {
+  font-weight: 500;
+}
+
+
+
+
+
+
+
+

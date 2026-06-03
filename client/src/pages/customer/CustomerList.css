@@ -1,0 +1,56 @@
+.customer-list-container {
+  padding: 24px;
+  background: #f0f2f5;
+  min-height: 100vh;
+}
+
+.customer-list-container .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-section {
+  margin-bottom: 16px;
+  padding: 16px;
+  background: #fafafa;
+  border-radius: 4px;
+}
+
+.customer-table {
+  margin-top: 16px;
+}
+
+.customer-table .ant-table-thead > tr > th {
+  background: #fafafa;
+  font-weight: 600;
+}
+
+.customer-table .ant-table-tbody > tr:hover {
+  background: #f5f5f5;
+}
+
+.customer-table .ant-btn-link {
+  padding: 0;
+  height: auto;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .customer-list-container {
+    padding: 12px;
+  }
+
+  .search-section {
+    padding: 12px;
+  }
+
+  .search-section .ant-space {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .search-section .ant-input-search {
+    width: 100% !important;
+  }
+}
+

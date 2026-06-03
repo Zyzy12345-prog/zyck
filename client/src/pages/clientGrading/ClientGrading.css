@@ -1,0 +1,31 @@
+.client-grading-container {
+  padding: 24px;
+  background: #f0f2f5;
+  min-height: calc(100vh - 64px);
+}
+
+.client-grading-container .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.client-grading-container .ant-statistic-title {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.client-grading-container .ant-progress {
+  margin-top: 8px;
+}
+
+
+
+
+
+
+
+
+
+
+
+

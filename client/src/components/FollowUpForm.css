@@ -1,0 +1,46 @@
+.follow-up-form-modal .ant-modal-body {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.follow-up-form-modal .quill {
+  background: white;
+}
+
+.follow-up-form-modal .ql-container {
+  min-height: 200px;
+  font-size: 14px;
+}
+
+.follow-up-form-modal .ql-editor {
+  min-height: 200px;
+}
+
+.follow-up-form-modal .ql-toolbar {
+  border-radius: 4px 4px 0 0;
+  background: #fafafa;
+}
+
+.follow-up-form-modal .ant-upload-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.follow-up-form-modal .ant-select-selection-item {
+  display: flex;
+  align-items: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

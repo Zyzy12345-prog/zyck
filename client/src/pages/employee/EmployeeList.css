@@ -1,0 +1,41 @@
+.employee-list-container {
+  padding: 24px;
+  background: #f0f2f5;
+  min-height: 100vh;
+}
+
+.employee-list-container .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.employee-list-container .ant-statistic-title {
+  font-size: 14px;
+  color: #666;
+}
+
+.employee-list-container .ant-statistic-content {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.employee-list-container .ant-table {
+  background: #fff;
+}
+
+.employee-list-container .ant-table-thead > tr > th {
+  background: #fafafa;
+  font-weight: 600;
+}
+
+.employee-list-container .ant-btn-link {
+  padding: 0;
+}
+
+
+
+
+
+
+
+

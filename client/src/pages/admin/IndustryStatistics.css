@@ -1,0 +1,40 @@
+.industry-statistics {
+  padding: 24px;
+  background: #f0f2f5;
+  min-height: 100vh;
+}
+
+.industry-statistics .ant-statistic-title {
+  font-size: 14px;
+  color: #666;
+}
+
+.industry-statistics .ant-statistic-content {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.industry-statistics .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.industry-statistics .ant-table-thead > tr > th {
+  background: #fafafa;
+  font-weight: 600;
+}
+
+.industry-statistics .ant-progress-line {
+  margin-bottom: 0;
+}
+
+
+
+
+
+
+
+
+
+
+

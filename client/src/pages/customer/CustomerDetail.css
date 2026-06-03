@@ -1,0 +1,415 @@
+.customer-detail-container {
+  padding: 24px;
+  background: #f0f2f5;
+  min-height: 100vh;
+}
+
+.customer-detail-loading,
+.customer-detail-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 20px;
+}
+
+/* 头部操作栏 */
+.customer-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* 客户信息卡片 */
+.customer-info-card {
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.customer-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.customer-avatar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  flex-shrink: 0;
+}
+
+.customer-title h1 {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 6px;
+  transition: all 0.3s;
+}
+
+.info-item:hover {
+  background: #f0f0f0;
+  transform: translateY(-2px);
+}
+
+.info-icon {
+  font-size: 20px;
+  color: #1890ff;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #8c8c8c;
+  margin-bottom: 4px;
+}
+
+.info-value {
+  font-size: 14px;
+  color: #262626;
+  font-weight: 500;
+}
+
+.customer-stats {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+}
+
+.customer-stats .ant-statistic-title {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+}
+
+.customer-stats .ant-statistic-content {
+  color: white;
+  font-size: 24px;
+}
+
+.customer-stats .ant-divider {
+  border-color: rgba(255, 255, 255, 0.2);
+  margin: 16px 0;
+}
+
+.customer-stats .ant-btn {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.customer-stats .ant-btn:hover {
+  color: white;
+  border-color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.customer-stats .ant-btn-primary {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: white;
+}
+
+.customer-stats .ant-btn-primary:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: white;
+}
+
+.customer-stats .ant-btn-link {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.customer-stats .ant-btn-link:hover {
+  color: white;
+}
+
+/* 标签页卡片 */
+.customer-tabs-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.customer-tabs-card .ant-tabs-nav {
+  margin-bottom: 24px;
+}
+
+.tab-header {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* 跟进记录时间线 */
+.follow-up-timeline {
+  margin-top: 20px;
+}
+
+.follow-up-card {
+  margin-bottom: 16px;
+  border-radius: 6px;
+  transition: all 0.3s;
+}
+
+.follow-up-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.follow-up-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.follow-type {
+  font-weight: 500;
+  color: #262626;
+}
+
+.follow-up-content {
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  line-height: 1.6;
+  color: #595959;
+}
+
+.follow-up-next {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #e6f7ff;
+  border-left: 3px solid #1890ff;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: #0050b3;
+}
+
+.follow-up-footer {
+  font-size: 12px;
+  color: #8c8c8c;
+  text-align: right;
+}
+
+/* 跟进记录附件 */
+.follow-up-files {
+  margin-top: 12px;
+}
+
+/* 跟进记录评论 */
+.follow-up-comments {
+  margin-top: 12px;
+  background: #fafafa;
+  padding: 12px;
+  border-radius: 4px;
+}
+
+.follow-up-comments .ant-list-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.follow-up-comments .ant-list-item:last-child {
+  border-bottom: none;
+}
+
+.follow-up-comments .ant-list-item-meta-avatar {
+  margin-right: 8px;
+}
+
+.follow-up-comments .ant-list-item-meta-title {
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.follow-up-comments .ant-list-item-meta-description {
+  font-size: 13px;
+  color: #595959;
+}
+
+/* 讨论列表 */
+.discussions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.discussion-card {
+  border-radius: 6px;
+  transition: all 0.3s;
+}
+
+.discussion-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.discussion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.discussion-user {
+  font-weight: 500;
+  color: #262626;
+}
+
+.discussion-time {
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+.discussion-content {
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 4px;
+  line-height: 1.6;
+  color: #595959;
+  margin-bottom: 12px;
+}
+
+.discussion-replies {
+  margin-top: 12px;
+  padding-left: 20px;
+  border-left: 2px solid #e8e8e8;
+}
+
+.reply-item {
+  padding: 12px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.reply-item:last-child {
+  margin-bottom: 0;
+}
+
+.reply-user {
+  font-weight: 500;
+  color: #262626;
+  font-size: 13px;
+}
+
+.reply-time {
+  font-size: 11px;
+  color: #8c8c8c;
+}
+
+.reply-content {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #595959;
+  line-height: 1.5;
+}
+
+/* 文件表格样式 */
+.customer-tabs-card .ant-table {
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.customer-tabs-card .ant-table-thead > tr > th {
+  background: #fafafa;
+  font-weight: 600;
+}
+
+/* 描述列表样式 */
+.customer-tabs-card .ant-descriptions-bordered .ant-descriptions-item-label {
+  background: #fafafa;
+  font-weight: 500;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .customer-detail-container {
+    padding: 16px;
+  }
+
+  .customer-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .customer-title h1 {
+    font-size: 20px;
+  }
+
+  .customer-stats {
+    margin-top: 16px;
+  }
+
+  .info-item {
+    padding: 8px;
+  }
+
+  .follow-up-timeline {
+    margin-left: -20px;
+  }
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.customer-info-card,
+.customer-tabs-card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* 标签样式增强 */
+.ant-tag {
+  border-radius: 4px;
+  padding: 2px 10px;
+  font-size: 12px;
+}
+
+/* 按钮样式增强 */
+.customer-detail-header .ant-btn {
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* 卡片阴影增强 */
+.ant-card {
+  transition: all 0.3s;
+}
+
+.ant-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* 时间线样式优化 */
+.ant-timeline-item-label {
+  font-weight: 500;
+  color: #595959;
+}
+
+/* 空状态样式 */
+.ant-empty {
+  padding: 40px 0;
+}
+
+.ant-empty-description {
+  color: #8c8c8c;
+}
+

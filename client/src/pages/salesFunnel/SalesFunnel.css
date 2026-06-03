@@ -1,0 +1,37 @@
+.sales-funnel-container {
+  padding: 24px;
+  background: #f0f2f5;
+  min-height: calc(100vh - 64px);
+}
+
+.funnel-board {
+  background: #fff;
+}
+
+.stages-container {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 16px 0;
+  min-height: 500px;
+}
+
+.stages-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.stages-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.stages-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.stages-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+

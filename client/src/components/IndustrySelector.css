@@ -1,0 +1,32 @@
+.industry-selector .ant-tree {
+  background: transparent;
+}
+
+.industry-selector .ant-tree-node-content-wrapper {
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.industry-selector .ant-tree-node-content-wrapper:hover {
+  background-color: #f5f5f5;
+}
+
+.industry-selector .ant-tree-node-selected .ant-tree-node-content-wrapper {
+  background-color: #e6f7ff !important;
+}
+
+.industry-selector .search-highlight {
+  color: #ff4d4f;
+  font-weight: bold;
+}
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,71 @@
+.analytics-container {
+  padding: 24px;
+  background: #f0f2f5;
+  min-height: calc(100vh - 64px);
+}
+
+.filter-card {
+  margin-bottom: 16px;
+}
+
+.analytics-container .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s;
+}
+
+.analytics-container .ant-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.analytics-container .ant-statistic-title {
+  font-size: 14px;
+  color: #8c8c8c;
+  margin-bottom: 8px;
+}
+
+.analytics-container .ant-statistic-content {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* 图表容器动画 */
+.analytics-container .ant-card-body {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+  .analytics-container {
+    padding: 12px;
+  }
+  
+  .analytics-container .ant-statistic-content {
+    font-size: 20px;
+  }
+}
+
+/* 加载状态 */
+.analytics-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+/* 空状态优化 */
+.analytics-container .ant-empty {
+  padding: 60px 0;
+}
+

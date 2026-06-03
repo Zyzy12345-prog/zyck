@@ -1,0 +1,171 @@
+.communication-timeline {
+  padding: 20px;
+}
+
+.communication-timeline .ant-timeline-item {
+  padding-bottom: 30px;
+}
+
+.timeline-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s;
+}
+
+.timeline-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.record-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.record-header .channel-name {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.record-header .record-time {
+  color: #8c8c8c;
+  font-size: 13px;
+}
+
+.record-subject {
+  margin-bottom: 8px;
+  font-size: 15px;
+  color: #262626;
+}
+
+.record-info {
+  margin-bottom: 6px;
+  color: #595959;
+  font-size: 14px;
+}
+
+.record-content {
+  margin: 12px 0;
+  padding: 10px;
+  background: #fafafa;
+  border-radius: 4px;
+  color: #262626;
+  line-height: 1.6;
+  max-height: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.record-attachments {
+  margin-top: 8px;
+  color: #1890ff;
+  font-size: 13px;
+}
+
+.record-footer {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid #f0f0f0;
+  color: #8c8c8c;
+  font-size: 13px;
+}
+
+/* 详情弹窗样式 */
+.record-detail {
+  padding: 10px 0;
+}
+
+.detail-row {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #595959;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.detail-content {
+  flex: 1;
+  padding: 10px;
+  background: #fafafa;
+  border-radius: 4px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* 附件样式 */
+.attachments {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.attachments-title {
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #595959;
+}
+
+.attachment-item {
+  display: inline-block;
+  margin: 5px;
+}
+
+.audio-attachment {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  background: white;
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+}
+
+.audio-attachment audio {
+  margin-top: 8px;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .communication-timeline {
+    padding: 10px;
+  }
+
+  .record-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .record-header .record-time {
+    margin-top: 8px;
+  }
+
+  .detail-row {
+    flex-direction: column;
+  }
+
+  .detail-label {
+    margin-bottom: 8px;
+  }
+}
+
+
+
+
+
+
+
+

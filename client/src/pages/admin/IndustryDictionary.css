@@ -1,0 +1,65 @@
+.industry-dictionary {
+  padding: 24px;
+  background: #f0f2f5;
+  min-height: 100vh;
+}
+
+.industry-dictionary .tree-node {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.industry-dictionary .node-name {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.industry-dictionary .node-detail {
+  padding: 16px;
+}
+
+.industry-dictionary .detail-item {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.industry-dictionary .detail-item:last-child {
+  border-bottom: none;
+}
+
+.industry-dictionary .detail-item label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #666;
+}
+
+.industry-dictionary .detail-item span {
+  color: #333;
+}
+
+.industry-dictionary .ant-tree-node-content-wrapper {
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.industry-dictionary .ant-tree-node-content-wrapper:hover {
+  background-color: #f5f5f5;
+}
+
+.industry-dictionary .ant-tree-node-selected .ant-tree-node-content-wrapper {
+  background-color: #e6f7ff !important;
+}
+
+
+
+
+
+
+
+
+
+
+

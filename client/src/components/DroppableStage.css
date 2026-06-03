@@ -1,0 +1,105 @@
+.droppable-stage {
+  flex: 0 0 360px;
+  min-width: 360px;
+  max-width: 360px;
+  margin: 0 6px;
+  position: relative;
+  min-height: 600px;
+}
+
+.droppable-stage.stage-active {
+  z-index: 10;
+}
+
+.stage-card {
+  height: 100%;
+  min-height: 600px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.1s ease-out; /* 加快到0.1s，更灵敏 */
+  border: 1px solid #d9d9d9;
+  position: relative;
+  background: #fff;
+}
+
+.stage-card.drag-over {
+  background: linear-gradient(135deg, #e6f7ff 0%, #bae7ff 100%);
+  border: 3px solid #1890ff !important;
+  box-shadow: 0 8px 24px rgba(24, 144, 255, 0.5) !important;
+  transform: scale(1.02);
+}
+
+.stage-card.drag-over::before {
+  content: '✓ 释放以移动到此阶段';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(24, 144, 255, 0.95);
+  color: white;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  z-index: 100;
+  pointer-events: none;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+.stage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.stage-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.stage-amount {
+  font-size: 14px;
+  color: #8c8c8c;
+  font-weight: normal;
+}
+
+.opportunities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  min-height: 500px;
+  transition: all 0.1s ease-out; /* 加快到0.1s，更灵敏 */
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.opportunities-list.drag-over-list {
+  background: rgba(24, 144, 255, 0.08);
+  border: 2px dashed rgba(24, 144, 255, 0.5);
+  padding: 16px; /* 拖拽时增加更多内边距 */
+}
+
+/* 空状态时的提示 */
+.opportunities-list:empty::after {
+  content: '拖拽商机到此处';
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #bfbfbf;
+  font-size: 14px;
+}
+

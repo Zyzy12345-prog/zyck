@@ -1,0 +1,35 @@
+.employee-detail-container {
+  padding: 24px;
+  background: #f0f2f5;
+  min-height: 100vh;
+}
+
+.employee-detail-container .ant-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.employee-detail-container .ant-descriptions-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.employee-detail-container .ant-descriptions-item-label {
+  font-weight: 500;
+  background: #fafafa;
+}
+
+.employee-detail-container .ant-descriptions-item-content {
+  background: #fff;
+}
+
+
+
+
+
+
+
+
