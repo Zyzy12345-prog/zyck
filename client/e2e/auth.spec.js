@@ -10,21 +10,21 @@ test.describe('认证流程', () => {
     await page.goto('/login');
     await expect(page.locator('h1, h2').first()).toBeVisible();
     await expect(page.locator('input[type="text"], input[type="email"]').first()).toBeVisible();
-    await expect(page.locator('input[type="password"]')).toBeVisible();
+    await expect(page.locator('#password')).toBeVisible();
     await expect(page.getByRole('button', { name: /登录|登入/i })).toBeVisible();
   });
 
   test('注册页面渲染正确', async ({ page }) => {
     await page.goto('/register');
     await expect(page.locator('input[type="text"], input[type="email"]').first()).toBeVisible();
-    await expect(page.locator('input[type="password"]')).toBeVisible();
+    await expect(page.locator('#password')).toBeVisible();
     await expect(page.getByRole('button', { name: /注册/i })).toBeVisible();
   });
 
   test('错误凭据显示错误消息', async ({ page }) => {
     await page.goto('/login');
     await page.locator('input[type="text"], input[type="email"]').first().fill('wrong@test.com');
-    await page.locator('input[type="password"]').fill('wrongpassword');
+    await page.locator('#password').fill('wrongpassword');
     await page.getByRole('button', { name: /登录|登入/i }).click();
     // 等待错误提示出现
     await page.waitForTimeout(2000);

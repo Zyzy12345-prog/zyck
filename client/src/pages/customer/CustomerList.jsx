@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { 
   Card, 
   Table, 
@@ -257,7 +257,7 @@ const CustomerList = () => {
   };
 
   // 表格列定义
-  const columns = [
+  const columns = useMemo(() => [
     {
       title: '客户名称',
       dataIndex: 'companyName',
@@ -352,7 +352,7 @@ const CustomerList = () => {
         </Space>
       )
     }
-  ];
+  ], [navigate]);
 
   return (
     <div className="customer-list-container">
@@ -375,8 +375,8 @@ const CustomerList = () => {
               icon={<ExportOutlined />}
               onClick={() => {
                 const params = new URLSearchParams();
-                if (filters.search) params.append('search', filters.search);
-                if (filters.status) params.append('status', filters.status);
+                if (searchText) params.append('search', searchText);
+                if (statusFilter) params.append('status', statusFilter);
                 window.open(`/api/clients/export?${params.toString()}`, '_blank');
               }}
             >

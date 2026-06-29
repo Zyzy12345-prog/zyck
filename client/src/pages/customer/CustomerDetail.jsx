@@ -48,7 +48,7 @@ import {
   MessageOutlined,
   RiseOutlined
 } from '@ant-design/icons';
-import axios from 'axios';
+import api from '../../services/api';
 import dayjs from 'dayjs';
 import FollowUpForm from '../../components/FollowUpForm';
 import FollowUpCalendar from '../../components/FollowUpCalendar';
@@ -100,7 +100,7 @@ const CustomerDetail = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:3000/api/clients/${id}`, {
+      const response = await api.get(`http://localhost:3000/api/clients/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -290,7 +290,7 @@ const CustomerDetail = () => {
   const handleCreateFollowUp = async (values) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(
+      const response = await api.post(
         `http://localhost:3000/api/clients/${id}/follow-ups`,
         {
           ...values,
@@ -323,7 +323,7 @@ const CustomerDetail = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(
+      const response = await api.post(
         `http://localhost:3000/api/clients/follow-ups/${followUpId}/comments`,
         { content: commentContent },
         {
@@ -352,7 +352,7 @@ const CustomerDetail = () => {
       onOk: async () => {
         try {
           const token = localStorage.getItem('token');
-          await axios.delete(`http://localhost:3000/api/clients/follow-up-comments/${commentId}`, {
+          await api.delete(`http://localhost:3000/api/clients/follow-up-comments/${commentId}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           message.success('删除成功');
@@ -368,7 +368,7 @@ const CustomerDetail = () => {
   const handleCreateDiscussion = async (values) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(
+      const response = await api.post(
         `http://localhost:3000/api/clients/${id}/discussions`,
         values,
         {
@@ -396,7 +396,7 @@ const CustomerDetail = () => {
       onOk: async () => {
         try {
           const token = localStorage.getItem('token');
-          await axios.delete(`http://localhost:3000/api/clients/follow-ups/${followUpId}`, {
+          await api.delete(`http://localhost:3000/api/clients/follow-ups/${followUpId}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           message.success('删除成功');
@@ -416,7 +416,7 @@ const CustomerDetail = () => {
       onOk: async () => {
         try {
           const token = localStorage.getItem('token');
-          await axios.delete(`http://localhost:3000/api/clients/discussions/${discussionId}`, {
+          await api.delete(`http://localhost:3000/api/clients/discussions/${discussionId}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           message.success('删除成功');
@@ -458,7 +458,7 @@ const CustomerDetail = () => {
     try {
       console.log('提交的表单数据:', values);
       const token = localStorage.getItem('token');
-      const response = await axios.put(
+      const response = await api.put(
         `http://localhost:3000/api/clients/${id}`,
         values,
         {

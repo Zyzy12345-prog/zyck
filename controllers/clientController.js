@@ -1,4 +1,4 @@
-const { Client, Assignment, User, IndustryCategory, FollowUp, CustomerFile, CustomerDiscussion, FollowUpComment, FollowUpReminder } = require('../models');
+const { Client, Assignment, User, IndustryCategory, FollowUp, CustomerFile, CustomerDiscussion, FollowUpComment, FollowUpReminder, LeadFollowUp } = require('../models');
 const { Op } = require('sequelize');
 const XLSX = require('xlsx');
 const industryMatchingService = require('../services/IndustryMatchingService');
@@ -1278,12 +1278,12 @@ exports.getPendingReminders = async (req, res, next) => {
       order: [['reminderTime', 'ASC']],
       include: [
         {
-          model: FollowUp,
+          model: LeadFollowUp,
           as: 'followUp',
           include: [
             {
-              model: Client,
-              as: 'client',
+              model: CustomerLead,
+              as: 'lead',
               attributes: ['id', 'companyName', 'contactPerson', 'phone']
             }
           ]
@@ -1328,12 +1328,12 @@ exports.getUserReminders = async (req, res, next) => {
       order: [['reminderTime', 'ASC']],
       include: [
         {
-          model: FollowUp,
+          model: LeadFollowUp,
           as: 'followUp',
           include: [
             {
-              model: Client,
-              as: 'client',
+              model: CustomerLead,
+              as: 'lead',
               attributes: ['id', 'companyName', 'contactPerson', 'phone']
             }
           ]
@@ -1364,15 +1364,17 @@ exports.markReminderAsSent = async (req, res, next) => {
     }
 
     await reminder.update({
-      status: 'sent',
-      sentAt: new Date()
+      isCompleted: true,
+      completedAt: new Date()
     });
 
-    // 同时更新跟进记录的提醒状态
-    await FollowUp.update(
-      { isReminded: true, remindedAt: new Date() },
-      { where: { id: reminder.followUpId } }
-    );
+    // 如果有关联跟进记录，标记为已提醒
+    if (reminder.followUpId) {
+      await LeadFollowUp.update(
+        { isImportant: true },
+        { where: { id: reminder.followUpId } }
+      );
+    }
 
     res.json({
       success: true,

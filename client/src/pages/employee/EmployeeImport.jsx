@@ -21,7 +21,7 @@ import {
   WarningOutlined
 } from '@ant-design/icons';
 import * as XLSX from 'xlsx';
-import axios from 'axios';
+import { employeeAPI } from '../../services/api';
 import './EmployeeImport.css';
 
 const { Text } = Typography;
@@ -34,9 +34,6 @@ const EmployeeImport = ({ visible, onClose, onSuccess }) => {
   const [validationResults, setValidationResults] = useState([]);
   const [importing, setImporting] = useState(false);
   const [importResults, setImportResults] = useState(null);
-
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
-  const getToken = () => localStorage.getItem('token');
 
   // 重置状态
   const resetState = () => {
@@ -334,14 +331,10 @@ const EmployeeImport = ({ visible, onClose, onSuccess }) => {
         remark: item.remark || undefined
       }));
 
-      const response = await axios.post(
-        `${API_BASE_URL}/employees/import`,
-        { employees: employeesToImport },
-        { headers: { Authorization: `Bearer ${getToken()}` } }
-      );
+      const response = await employeeAPI.importEmployees({ employees: employeesToImport });
 
-      if (response.data.success) {
-        setImportResults(response.data.data);
+      if (response.success) {
+        setImportResults(response.data);
         setCurrentStep(2);
         message.success(response.data.message);
       }

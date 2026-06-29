@@ -60,7 +60,7 @@ const CallForm = ({ call, onSuccess, onCancel }) => {
   const fetchClients = async () => {
     try {
       const response = await clientAPI.getClients({ limit: 1000 });
-      setClients(response.data || []);
+      setClients(response.data?.clients || []);
     } catch (error) {
       console.error('Failed to fetch clients:', error);
     }

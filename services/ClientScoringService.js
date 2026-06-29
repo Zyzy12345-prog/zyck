@@ -202,24 +202,116 @@ class ClientScoringService {
   }
 
   /**
-   * Batch calculate scores for all clients
+   * Batch calculate scores for all clients (optimized: 3 batch queries instead of 3N)
    */
   async batchCalculateScores(clientIds = null) {
     try {
       const where = clientIds ? { id: { [Op.in]: clientIds } } : {};
-      const clients = await Client.findAll({ where });
+      const clients = await Client.findAll({ where, attributes: ['id', 'companyScale', 'registeredCapital', 'customerLevel'] });
+
+      if (clients.length === 0) {
+        return { total: 0, successful: 0, failed: 0, results: [] };
+      }
+
+      const ids = clients.map(c => c.id);
+
+      // Batch 1: total follow-up counts per client
+      const followUpCounts = await FollowUp.findAll({
+        attributes: ['clientId', [FollowUp.sequelize.fn('COUNT', '*'), 'count']],
+        where: { clientId: { [Op.in]: ids } },
+        group: ['clientId'],
+        raw: true
+      });
+
+      // Batch 2: recent follow-up counts (last 90 days)
+      const recentFollowUpCounts = await FollowUp.findAll({
+        attributes: ['clientId', [FollowUp.sequelize.fn('COUNT', '*'), 'count']],
+        where: {
+          clientId: { [Op.in]: ids },
+          followTime: { [Op.gte]: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000) }
+        },
+        group: ['clientId'],
+        raw: true
+      });
+
+      // Batch 3: all opportunities for these clients
+      const allOpportunities = await SalesOpportunity.findAll({
+        where: { clientId: { [Op.in]: ids } },
+        attributes: ['id', 'clientId', 'status', 'expectedAmount'],
+        raw: true
+      });
+
+      // Index by clientId for fast lookup
+      const followUpMap = {};
+      followUpCounts.forEach(r => { followUpMap[r.clientId] = { total: parseInt(r.count) || 0, recent: 0 }; });
+      recentFollowUpCounts.forEach(r => {
+        if (!followUpMap[r.clientId]) followUpMap[r.clientId] = { total: 0, recent: 0 };
+        followUpMap[r.clientId].recent = parseInt(r.count) || 0;
+      });
+
+      const oppsByClient = {};
+      allOpportunities.forEach(o => {
+        if (!oppsByClient[o.clientId]) oppsByClient[o.clientId] = [];
+        oppsByClient[o.clientId].push(o);
+      });
 
       const results = [];
       for (const client of clients) {
         try {
-          const score = await this.calculateClientScore(client.id);
-          results.push(score);
-        } catch (error) {
-          console.error(`Error calculating score for client ${client.id}:`, error);
+          const fu = followUpMap[client.id] || { total: 0, recent: 0 };
+          const opps = oppsByClient[client.id] || [];
+
+          const followUpScore = this.calculateFollowUpScore(fu.total, fu.recent);
+
+          const totalExpectedAmount = opps.reduce((sum, opp) => sum + parseFloat(opp.expectedAmount || 0), 0);
+          const wonCount = opps.filter(opp => opp.status === 'won').length;
+
+          const dealAmountScore = this.calculateDealAmountScore(totalExpectedAmount);
+          const interactionScore = this.calculateInteractionScore(fu.recent, wonCount);
+          const potentialScore = this.calculatePotentialScore(client, opps);
+
+          const totalScore = Math.round(
+            followUpScore * 0.25 +
+            dealAmountScore * 0.35 +
+            interactionScore * 0.20 +
+            potentialScore * 0.20
+          );
+
+          const calculatedLevel = this.determineLevel(totalScore);
+
+          await ClientScore.upsert({
+            clientId: client.id,
+            totalScore,
+            followUpScore,
+            dealAmountScore,
+            interactionScore,
+            potentialScore,
+            calculatedLevel,
+            calculationDate: new Date()
+          });
+
+          if (client.customerLevel !== calculatedLevel) {
+            await Client.update({ customerLevel: calculatedLevel }, { where: { id: client.id } });
+          }
+
           results.push({
             clientId: client.id,
-            error: error.message
+            totalScore,
+            followUpScore,
+            dealAmountScore,
+            interactionScore,
+            potentialScore,
+            calculatedLevel,
+            breakdown: {
+              followUpCount: fu.total,
+              recentFollowUps: fu.recent,
+              totalExpectedAmount,
+              wonOpportunities: wonCount
+            }
           });
+        } catch (error) {
+          console.error(`Error calculating score for client ${client.id}:`, error);
+          results.push({ clientId: client.id, error: error.message });
         }
       }
 

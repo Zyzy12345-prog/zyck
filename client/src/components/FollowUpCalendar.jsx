@@ -9,7 +9,7 @@ import {
   FileTextOutlined
 } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import axios from 'axios';
+import api from '../services/api';
 import './FollowUpCalendar.css';
 
 const FollowUpCalendar = ({ userId }) => {
@@ -52,7 +52,7 @@ const FollowUpCalendar = ({ userId }) => {
         params.userId = userId;
       }
 
-      const response = await axios.get('http://localhost:3000/api/clients/calendar/events', {
+      const response = await api.get('http://localhost:3000/api/clients/calendar/events', {
         headers: { Authorization: `Bearer ${token}` },
         params
       });

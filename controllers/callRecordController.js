@@ -24,7 +24,8 @@ exports.createCallRecord = async (req, res, next) => {
       qualityScore,
       customerSatisfaction,
       tags,
-      isImportant
+      isImportant,
+      callTime
     } = req.body;
 
     const callRecord = await CallRecord.create({

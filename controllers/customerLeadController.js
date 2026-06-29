@@ -559,17 +559,32 @@ exports.recalculateScore = async (req, res, next) => {
 // 批量重新计算所有线索评分
 exports.batchRecalculateScores = async (req, res, next) => {
   try {
-    const leads = await CustomerLead.findAll();
+    // 只查评分需要的字段，避免全表字段加载
+    const leads = await CustomerLead.findAll({
+      attributes: ['id', 'companyName', 'score', 'priority', 'status', 'source', 'estimatedValue', 'companyScale', 'lastContactTime']
+    });
+
     let updated = 0;
     const results = [];
+    const BATCH_SIZE = 200;
 
-    for (const lead of leads) {
-      const { totalScore, level } = calculateLeadScore(lead);
-      if (lead.score !== totalScore) {
-        await lead.update({ score: totalScore }, { hooks: false });
-        updated++;
+    // 分批处理并批量更新
+    for (let i = 0; i < leads.length; i += BATCH_SIZE) {
+      const batch = leads.slice(i, i + BATCH_SIZE);
+      const updates = [];
+
+      for (const lead of batch) {
+        const { totalScore, level } = calculateLeadScore(lead);
+        if (lead.score !== totalScore) {
+          updates.push({ id: lead.id, score: totalScore });
+          updated++;
+        }
+        results.push({ id: lead.id, companyName: lead.companyName, score: totalScore, level });
       }
-      results.push({ id: lead.id, companyName: lead.companyName, score: totalScore, level });
+
+      if (updates.length > 0) {
+        await CustomerLead.bulkCreate(updates, { updateOnDuplicate: ['score'] });
+      }
     }
 
     const distribution = { S: 0, A: 0, B: 0, C: 0, D: 0 };

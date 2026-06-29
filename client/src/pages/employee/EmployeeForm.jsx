@@ -15,7 +15,7 @@ import {
 } from 'antd';
 import { SaveOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { employeeAPI } from '../../services/api';
 import dayjs from 'dayjs';
 import './EmployeeForm.css';
 
@@ -33,9 +33,6 @@ const EmployeeForm = () => {
   const [departments, setDepartments] = useState([]);
   const [roles, setRoles] = useState([]);
 
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
-  const getToken = () => localStorage.getItem('token');
-
   const isEditMode = !!id;
 
   useEffect(() => {
@@ -49,16 +46,12 @@ const EmployeeForm = () => {
   const fetchOptions = async () => {
     try {
       const [deptRes, roleRes] = await Promise.all([
-        axios.get(`${API_BASE_URL}/employees/options/departments`, {
-          headers: { Authorization: `Bearer ${getToken()}` }
-        }),
-        axios.get(`${API_BASE_URL}/employees/options/roles`, {
-          headers: { Authorization: `Bearer ${getToken()}` }
-        })
+        employeeAPI.getDepartmentOptions(),
+        employeeAPI.getRoleOptions()
       ]);
 
-      if (deptRes.data.success) setDepartments(deptRes.data.data);
-      if (roleRes.data.success) setRoles(roleRes.data.data);
+      if (deptRes.success) setDepartments(deptRes.data || []);
+      if (roleRes.success) setRoles(roleRes.data || []);
     } catch (error) {
       console.error('获取选项数据失败:', error);
     }
@@ -68,12 +61,10 @@ const EmployeeForm = () => {
   const fetchEmployeeDetail = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_BASE_URL}/employees/${id}`, {
-        headers: { Authorization: `Bearer ${getToken()}` }
-      });
+      const response = await employeeAPI.getEmployee(id);
 
-      if (response.data.success) {
-        const employee = response.data.data;
+      if (response.success) {
+        const employee = response.data;
         form.setFieldsValue({
           ...employee,
           departmentId: employee.department?.id,
@@ -103,18 +94,11 @@ const EmployeeForm = () => {
         resignDate: values.resignDate ? values.resignDate.format('YYYY-MM-DD') : null
       };
 
-      let response;
-      if (isEditMode) {
-        response = await axios.put(`${API_BASE_URL}/employees/${id}`, data, {
-          headers: { Authorization: `Bearer ${getToken()}` }
-        });
-      } else {
-        response = await axios.post(`${API_BASE_URL}/employees`, data, {
-          headers: { Authorization: `Bearer ${getToken()}` }
-        });
-      }
+      const response = isEditMode
+        ? await employeeAPI.updateEmployee(id, data)
+        : await employeeAPI.createEmployee(data);
 
-      if (response.data.success) {
+      if (response.success) {
         message.success(isEditMode ? '更新员工信息成功' : '创建员工成功');
         navigate('/employees');
       }

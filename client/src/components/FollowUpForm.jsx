@@ -20,7 +20,7 @@ import {
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import dayjs from 'dayjs';
-import axios from 'axios';
+import api from '../services/api';
 import './FollowUpForm.css';
 
 const { Option } = Select;
@@ -93,7 +93,7 @@ const FollowUpForm = ({ visible, onClose, onSuccess, clientId, followUp = null }
       let response;
       if (followUp) {
         // 更新跟进记录
-        response = await axios.put(
+        response = await api.put(
           `http://localhost:3000/api/clients/follow-ups/${followUp.id}`,
           formData,
           {
@@ -105,7 +105,7 @@ const FollowUpForm = ({ visible, onClose, onSuccess, clientId, followUp = null }
         );
       } else {
         // 创建跟进记录
-        response = await axios.post(
+        response = await api.post(
           `http://localhost:3000/api/clients/${clientId}/follow-ups`,
           formData,
           {

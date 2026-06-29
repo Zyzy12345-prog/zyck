@@ -30,7 +30,7 @@ import {
   ImportOutlined
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { employeeAPI } from '../../services/api';
 import EmployeeImport from './EmployeeImport';
 import './EmployeeList.css';
 
@@ -72,12 +72,6 @@ const EmployeeList = () => {
   // 导入模态框
   const [importModalVisible, setImportModalVisible] = useState(false);
 
-  // 获取API基础URL
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
-
-  // 获取token
-  const getToken = () => localStorage.getItem('token');
-
   // 初始化加载
   useEffect(() => {
     fetchEmployees();
@@ -107,16 +101,13 @@ const EmployeeList = () => {
         }
       });
 
-      const response = await axios.get(`${API_BASE_URL}/employees`, {
-        params,
-        headers: { Authorization: `Bearer ${getToken()}` }
-      });
+      const response = await employeeAPI.getEmployees(params);
 
-      if (response.data.success) {
-        setEmployees(response.data.data.employees);
+      if (response.success) {
+        setEmployees(response.data?.employees || []);
         setPagination(prev => ({
           ...prev,
-          total: response.data.data.pagination.total
+          total: response.data?.pagination?.total || 0
         }));
       }
     } catch (error) {
@@ -130,26 +121,15 @@ const EmployeeList = () => {
   // 获取统计数据
   const fetchStatistics = async () => {
     try {
-      console.log('正在获取统计数据...');
-      console.log('API URL:', `${API_BASE_URL}/employees/statistics`);
-      console.log('Token:', getToken());
-      
-      const response = await axios.get(`${API_BASE_URL}/employees/statistics`, {
-        headers: { Authorization: `Bearer ${getToken()}` }
-      });
+      const response = await employeeAPI.getStatistics();
 
-      console.log('统计数据响应:', response.data);
-
-      if (response.data.success) {
-        console.log('设置统计数据:', response.data.data);
-        setStatistics(response.data.data);
+      if (response.success) {
+        setStatistics(response.data);
       } else {
-        console.error('统计数据获取失败:', response.data.message);
+        console.error('统计数据获取失败:', response.message);
       }
     } catch (error) {
       console.error('获取统计数据失败:', error);
-      console.error('错误详情:', error.response?.data);
-      console.error('错误状态:', error.response?.status);
     }
   };
 
@@ -157,20 +137,14 @@ const EmployeeList = () => {
   const fetchFilterOptions = async () => {
     try {
       const [deptRes, posRes, roleRes] = await Promise.all([
-        axios.get(`${API_BASE_URL}/employees/options/departments`, {
-          headers: { Authorization: `Bearer ${getToken()}` }
-        }),
-        axios.get(`${API_BASE_URL}/employees/options/positions`, {
-          headers: { Authorization: `Bearer ${getToken()}` }
-        }),
-        axios.get(`${API_BASE_URL}/employees/options/roles`, {
-          headers: { Authorization: `Bearer ${getToken()}` }
-        })
+        employeeAPI.getDepartmentOptions(),
+        employeeAPI.getPositionOptions(),
+        employeeAPI.getRoleOptions()
       ]);
 
-      if (deptRes.data.success) setDepartments(deptRes.data.data);
-      if (posRes.data.success) setPositions(posRes.data.data);
-      if (roleRes.data.success) setRoles(roleRes.data.data);
+      if (deptRes.success) setDepartments(deptRes.data || []);
+      if (posRes.success) setPositions(posRes.data || []);
+      if (roleRes.success) setRoles(roleRes.data || []);
     } catch (error) {
       console.error('获取筛选选项失败:', error);
     }
@@ -236,11 +210,9 @@ const EmployeeList = () => {
       okType: 'danger',
       onOk: async () => {
         try {
-          const response = await axios.delete(`${API_BASE_URL}/employees/${record.id}`, {
-            headers: { Authorization: `Bearer ${getToken()}` }
-          });
+          const response = await employeeAPI.deleteEmployee(record.id);
 
-          if (response.data.success) {
+          if (response.success) {
             message.success('员工已停用');
             fetchEmployees();
             fetchStatistics();
@@ -267,13 +239,9 @@ const EmployeeList = () => {
       cancelText: '取消',
       onOk: async () => {
         try {
-          const response = await axios.patch(
-            `${API_BASE_URL}/employees/${record.id}/status`,
-            { status: newStatus },
-            { headers: { Authorization: `Bearer ${getToken()}` } }
-          );
+          const response = await employeeAPI.updateEmployeeStatus(record.id, newStatus);
 
-          if (response.data.success) {
+          if (response.success) {
             message.success(`员工已${statusText[newStatus]}`);
             fetchEmployees();
             fetchStatistics();
@@ -294,13 +262,9 @@ const EmployeeList = () => {
       cancelText: '取消',
       onOk: async () => {
         try {
-          const response = await axios.post(
-            `${API_BASE_URL}/employees/${record.id}/reset-password`,
-            {},
-            { headers: { Authorization: `Bearer ${getToken()}` } }
-          );
+          const response = await employeeAPI.resetPassword(record.id);
 
-          if (response.data.success) {
+          if (response.success) {
             Modal.info({
               title: '密码重置成功',
               content: (

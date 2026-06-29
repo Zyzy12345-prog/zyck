@@ -18,7 +18,7 @@ import {
   UnlockOutlined
 } from '@ant-design/icons';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { employeeAPI } from '../../services/api';
 import './EmployeeDetail.css';
 
 const EmployeeDetail = () => {
@@ -26,9 +26,6 @@ const EmployeeDetail = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [employee, setEmployee] = useState(null);
-
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
-  const getToken = () => localStorage.getItem('token');
 
   useEffect(() => {
     fetchEmployeeDetail();
@@ -38,12 +35,10 @@ const EmployeeDetail = () => {
   const fetchEmployeeDetail = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_BASE_URL}/employees/${id}`, {
-        headers: { Authorization: `Bearer ${getToken()}` }
-      });
+      const response = await employeeAPI.getEmployee(id);
 
-      if (response.data.success) {
-        setEmployee(response.data.data);
+      if (response.success) {
+        setEmployee(response.data);
       }
     } catch (error) {
       message.error(error.response?.data?.message || '获取员工信息失败');
@@ -62,13 +57,9 @@ const EmployeeDetail = () => {
       cancelText: '取消',
       onOk: async () => {
         try {
-          const response = await axios.post(
-            `${API_BASE_URL}/employees/${id}/reset-password`,
-            {},
-            { headers: { Authorization: `Bearer ${getToken()}` } }
-          );
+          const response = await employeeAPI.resetPassword(id);
 
-          if (response.data.success) {
+          if (response.success) {
             Modal.info({
               title: '密码重置成功',
               content: (
@@ -103,13 +94,9 @@ const EmployeeDetail = () => {
       cancelText: '取消',
       onOk: async () => {
         try {
-          const response = await axios.patch(
-            `${API_BASE_URL}/employees/${id}/status`,
-            { status: newStatus },
-            { headers: { Authorization: `Bearer ${getToken()}` } }
-          );
+          const response = await employeeAPI.updateEmployeeStatus(id, newStatus);
 
-          if (response.data.success) {
+          if (response.success) {
             message.success(`员工已${statusText[newStatus]}`);
             fetchEmployeeDetail();
           }
@@ -130,11 +117,9 @@ const EmployeeDetail = () => {
       okType: 'danger',
       onOk: async () => {
         try {
-          const response = await axios.delete(`${API_BASE_URL}/employees/${id}`, {
-            headers: { Authorization: `Bearer ${getToken()}` }
-          });
+          const response = await employeeAPI.deleteEmployee(id);
 
-          if (response.data.success) {
+          if (response.success) {
             message.success('员工已停用');
             navigate('/employees');
           }

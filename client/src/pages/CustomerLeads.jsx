@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Card, Table, Button, Input, Select, Tag, Space, Modal, Form,
@@ -493,7 +493,7 @@ const CustomerLeads = () => {
     urgent: '紧急'
   };
 
-  const columns = [
+  const columns = useMemo(() => [
     {
       title: '公司名称',
       dataIndex: 'companyName',
@@ -709,7 +709,7 @@ const CustomerLeads = () => {
         </Space>
       )
     }
-  ];
+  ], [navigate]);
 
   const rowSelection = {
     selectedRowKeys,

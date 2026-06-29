@@ -130,6 +130,13 @@ export const employeeAPI = {
   uploadAvatar: (id, formData) => api.post(`/employees/${id}/avatar`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   }),
+  getStatistics: () => api.get('/employees/statistics'),
+  getDepartmentOptions: () => api.get('/employees/options/departments'),
+  getPositionOptions: () => api.get('/employees/options/positions'),
+  getRoleOptions: () => api.get('/employees/options/roles'),
+  importEmployees: (formData) => api.post('/employees/import', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  }),
 };
 
 // 角色相关API
@@ -302,15 +309,15 @@ export const customerPoolAPI = {
 
 // 客户标签相关API (Phase 4 扩展)
 export const tagAPI = {
-  getTags: (params) => api.get('/customer-tags', { params }),
-  createTag: (data) => api.post('/customer-tags', data),
-  updateTag: (id, data) => api.put(`/customer-tags/${id}`, data),
-  deleteTag: (id) => api.delete(`/customer-tags/${id}`),
+  getTags: (params) => api.get('/customer-tags/tags', { params }),
+  createTag: (data) => api.post('/customer-tags/tags', data),
+  updateTag: (id, data) => api.put(`/customer-tags/tags/${id}`, data),
+  deleteTag: (id) => api.delete(`/customer-tags/tags/${id}`),
   addTagToClient: (data) => api.post('/customer-tags/client-tags', data),
   removeTagFromClient: (data) => api.delete('/customer-tags/client-tags', { data }),
-  batchAddTags: (data) => api.post('/customer-tags/batch-add', data),
-  getClientTags: (clientId) => api.get(`/customer-tags/clients/${clientId}`),
-  getStatistics: () => api.get('/customer-tags/statistics'),
+  batchAddTags: (data) => api.post('/customer-tags/client-tags/batch', data),
+  getClientTags: (clientId) => api.get(`/customer-tags/clients/${clientId}/tags`),
+  getStatistics: () => api.get('/customer-tags/tags/statistics'),
   searchClientsByTags: (params) => api.get('/customer-tags/search-clients', { params }),
 };
 

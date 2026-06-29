@@ -155,6 +155,12 @@ export const exportMultiSheetExcel = (sheets, filename = 'export') => {
       XLSX.utils.book_append_sheet(workbook, worksheet, sheet.name || 'Sheet');
     });
 
+    // 检查是否有数据可导出
+    if (workbook.SheetNames.length === 0) {
+      message.warning('暂无数据可导出');
+      return;
+    }
+
     // 导出文件
     XLSX.writeFile(workbook, `${filename}.xlsx`);
     message.success('Excel 导出成功');

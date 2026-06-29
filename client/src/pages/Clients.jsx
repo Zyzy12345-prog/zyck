@@ -50,11 +50,11 @@ const Clients = () => {
       };
       
       const response = await clientAPI.getClients(params);
-      setClients(response.data || []);
+      setClients(response.data?.clients || []);
       setPagination(prev => ({
         ...prev,
-        total: response.pagination?.total || 0,
-        totalPages: response.pagination?.totalPages || 0,
+        total: response.data?.pagination?.total || 0,
+        totalPages: response.data?.pagination?.pages || 0,
       }));
     } catch (error) {
       console.error('Failed to fetch clients:', error);

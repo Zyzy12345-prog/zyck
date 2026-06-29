@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Card,
   Table,
@@ -111,7 +111,7 @@ const CallRecords = () => {
         clientAPI.getClients({ limit: 100 }),
         customerLeadAPI.getLeads({ limit: 100 })
       ]);
-      if (clientRes.success) setClients(clientRes.data || []);
+      if (clientRes.success) setClients(clientRes.data?.clients || []);
       if (leadRes.success) setLeads(leadRes.data || []);
     } catch (e) { /* silent fail */ }
   };
@@ -198,7 +198,7 @@ const CallRecords = () => {
     callback: { text: '回拨', icon: <PhoneOutlined /> }
   };
 
-  const columns = [
+  const columns = useMemo(() => [
     {
       title: '外呼时间',
       dataIndex: 'callTime',
@@ -317,7 +317,7 @@ const CallRecords = () => {
         </Space>
       )
     }
-  ];
+  ], []);
 
   return (
     <div className="call-records-page">

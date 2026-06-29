@@ -8,12 +8,12 @@ exports.getSalesAnalytics = async (req, res, next) => {
     const { startDate, endDate, userId } = req.query;
     
     const where = { status: 'active' };
-    if (userId) where.assigned_to = userId;
+    if (userId) where.assignedTo = userId;
     
     if (startDate || endDate) {
-      where.created_at = {};
-      if (startDate) where.created_at[Op.gte] = new Date(startDate);
-      if (endDate) where.created_at[Op.lte] = new Date(endDate);
+      where.createdAt = {};
+      if (startDate) where.createdAt[Op.gte] = new Date(startDate);
+      if (endDate) where.createdAt[Op.lte] = new Date(endDate);
     }
 
     // 1. 销售趋势数据（按月统计）- PostgreSQL
@@ -162,12 +162,12 @@ exports.getFollowUpAnalytics = async (req, res, next) => {
     const { startDate, endDate, userId } = req.query;
     
     const where = {};
-    if (userId) where.user_id = userId;
+    if (userId) where.userId = userId;
     
     if (startDate || endDate) {
-      where.follow_time = {};
-      if (startDate) where.follow_time[Op.gte] = new Date(startDate);
-      if (endDate) where.follow_time[Op.lte] = new Date(endDate);
+      where.followTime = {};
+      if (startDate) where.followTime[Op.gte] = new Date(startDate);
+      if (endDate) where.followTime[Op.lte] = new Date(endDate);
     }
 
     // 1. 跟进方式分布
@@ -245,12 +245,12 @@ exports.getCallAnalytics = async (req, res, next) => {
     const { startDate, endDate, userId } = req.query;
     
     const where = {};
-    if (userId) where.user_id = userId;
+    if (userId) where.userId = userId;
     
     if (startDate || endDate) {
-      where.call_time = {};
-      if (startDate) where.call_time[Op.gte] = new Date(startDate);
-      if (endDate) where.call_time[Op.lte] = new Date(endDate);
+      where.callTime = {};
+      if (startDate) where.callTime[Op.gte] = new Date(startDate);
+      if (endDate) where.callTime[Op.lte] = new Date(endDate);
     }
 
     // 1. 外呼量趋势 - PostgreSQL
