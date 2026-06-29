@@ -1,48 +1,42 @@
+/* ═══════════════════════════════════════════════════════════
+   SETTINGS — Account Page
+   ═══════════════════════════════════════════════════════════ */
+
 .settings-page {
-  max-width: 900px;
+  max-width: 760px;
   margin: 0 auto;
 }
 
 .settings-page .page-header {
-  margin-bottom: 24px;
-}
-
-.settings-page .page-header .page-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0 0 4px 0;
-}
-
-.settings-page .page-header .page-subtitle {
-  color: #888;
-  margin: 0;
-  font-size: 14px;
+  margin-bottom: 20px;
 }
 
 .settings-content {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
+/* Card */
 .settings-card {
-  border-radius: 12px;
-  border: 1px solid #f0f0f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border-radius: 8px !important;
+  border: 1px solid #f0f0f0 !important;
 }
 
 .settings-card .ant-card-head {
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0 !important;
   font-weight: 600;
 }
 
-@media (max-width: 768px) {
-  .settings-page {
-    padding: 0 8px;
-  }
+.settings-card .ant-descriptions-item-label {
+  color: #666 !important;
+}
 
-  .settings-card .ant-descriptions-view table {
-    display: block;
-  }
+.settings-card .ant-descriptions-bordered .ant-descriptions-item-label,
+.settings-card .ant-descriptions-bordered .ant-descriptions-item-content {
+  border-color: #f0f0f0 !important;
+}
+
+@media (max-width: 768px) {
+  .settings-page { padding: 0; }
 }

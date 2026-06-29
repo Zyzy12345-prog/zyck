@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, theme } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import { AuthProvider } from './contexts/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
@@ -37,7 +37,39 @@ import CallTaskList from './pages/CallTaskList';
 
 function App() {
   return (
-    <ConfigProvider locale={zhCN}>
+    <ConfigProvider
+      locale={zhCN}
+      theme={{
+        token: {
+          colorPrimary: '#1677ff',
+          colorSuccess: '#52c41a',
+          colorWarning: '#faad14',
+          colorError: '#ff4d4f',
+          colorInfo: '#1677ff',
+          colorTextBase: '#1f1f1f',
+          colorBgBase: '#ffffff',
+          fontFamily: "-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif",
+          borderRadius: 6,
+        },
+        components: {
+          Table: {
+            headerBg: '#fafafa',
+            rowHoverBg: '#e6f4ff',
+            borderColor: '#f0f0f0',
+          },
+          Menu: {
+            darkItemBg: '#001529',
+            darkSubMenuItemBg: '#000c17',
+            darkItemColor: 'rgba(255,255,255,0.65)',
+            darkItemHoverBg: 'rgba(255,255,255,0.08)',
+            darkItemSelectedBg: '#1677ff',
+          },
+          Layout: {
+            siderBg: '#001529',
+          },
+        },
+      }}
+    >
       <AuthProvider>
         <Router>
         <Routes>

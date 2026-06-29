@@ -1,56 +1,47 @@
+/* ═══════════════════════════════════════════════════════════
+   CUSTOMER LIST — Enterprise Data Table
+   ═══════════════════════════════════════════════════════════ */
+
 .customer-list-container {
-  padding: 24px;
-  background: #f0f2f5;
-  min-height: 100vh;
+  padding: 0;
+  background: transparent;
 }
 
-.customer-list-container .ant-card {
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
+/* ── Toolbar ── */
 .search-section {
   margin-bottom: 16px;
   padding: 16px;
-  background: #fafafa;
-  border-radius: 4px;
+  background: #fff;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
 }
 
-.customer-table {
-  margin-top: 16px;
+/* ── Table refinements ── */
+.customer-table .ant-table {
+  font-size: 14px;
 }
 
 .customer-table .ant-table-thead > tr > th {
-  background: #fafafa;
+  background: #fafafa !important;
   font-weight: 600;
+  color: #666 !important;
+  font-size: 13px;
+  border-bottom: 1px solid #f0f0f0 !important;
 }
 
-.customer-table .ant-table-tbody > tr:hover {
-  background: #f5f5f5;
+/* ── Card containers ── */
+.customer-list-container .ant-card {
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
 }
 
-.customer-table .ant-btn-link {
-  padding: 0;
-  height: auto;
-}
-
-/* 响应式设计 */
 @media (max-width: 768px) {
-  .customer-list-container {
-    padding: 12px;
-  }
-
-  .search-section {
-    padding: 12px;
-  }
-
+  .search-section { padding: 12px; }
   .search-section .ant-space {
     flex-direction: column;
     width: 100%;
   }
-
   .search-section .ant-input-search {
     width: 100% !important;
   }
 }
-
