@@ -28,8 +28,12 @@ import CustomerLeads from './pages/CustomerLeads';
 import CustomerPool from './pages/CustomerPool';
 import ConversionFunnel from './pages/customer/ConversionFunnel';
 import FollowUpStatistics from './pages/FollowUpStatistics';
+import Settings from './pages/Settings';
+import LeadTagManagement from './pages/LeadTagManagement';
+import LeadDetail from './pages/LeadDetail';
 // Call System
 import CallRecords from './pages/CallRecords';
+import CallTaskList from './pages/CallTaskList';
 
 function App() {
   return (
@@ -148,6 +152,14 @@ function App() {
               }
             />
             <Route
+              path="leads/:id"
+              element={
+                <PrivateRoute roles={['admin', 'manager', 'sales']}>
+                  <LeadDetail />
+                </PrivateRoute>
+              }
+            />
+            <Route
               path="customer-pool"
               element={
                 <PrivateRoute roles={['admin', 'manager', 'sales']}>
@@ -172,10 +184,26 @@ function App() {
               }
             />
             <Route
+              path="lead-tags"
+              element={
+                <PrivateRoute roles={['admin', 'manager']}>
+                  <LeadTagManagement />
+                </PrivateRoute>
+              }
+            />
+            <Route
               path="call-records"
               element={
                 <PrivateRoute roles={['admin', 'manager', 'sales']}>
                   <CallRecords />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="call-tasks"
+              element={
+                <PrivateRoute roles={['admin', 'manager', 'sales']}>
+                  <CallTaskList />
                 </PrivateRoute>
               }
             />
@@ -208,6 +236,14 @@ function App() {
               element={
                 <PrivateRoute roles={['admin', 'manager']}>
                   <EmployeeForm />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="settings"
+              element={
+                <PrivateRoute>
+                  <Settings />
                 </PrivateRoute>
               }
             />

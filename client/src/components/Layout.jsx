@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import {
@@ -10,7 +10,11 @@ import {
   Menu,
   X,
   ChevronDown,
+  Settings,
+  Bell,
 } from 'lucide-react';
+import { followUpReminderAPI } from '../services/api';
+import FollowUpReminderModal from './FollowUpReminderModal';
 import './Layout.css';
 
 const Layout = () => {
@@ -19,6 +23,25 @@ const Layout = () => {
   const { user, logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [reminderCount, setReminderCount] = useState(0);
+  const [reminderVisible, setReminderVisible] = useState(false);
+
+  useEffect(() => {
+    fetchReminderCount();
+    const interval = setInterval(fetchReminderCount, 60000); // 每分钟刷新
+    return () => clearInterval(interval);
+  }, []);
+
+  const fetchReminderCount = async () => {
+    try {
+      const response = await followUpReminderAPI.getReminderStatistics();
+      if (response.success) {
+        setReminderCount(response.data?.unread || 0);
+      }
+    } catch (error) {
+      // 静默失败
+    }
+  };
   const [customerMenuOpen, setCustomerMenuOpen] = useState(false);
   const [employeeMenuOpen, setEmployeeMenuOpen] = useState(false);
   const [callMenuOpen, setCallMenuOpen] = useState(false);
@@ -47,8 +70,9 @@ const Layout = () => {
         { path: '/conversion-funnel', label: '转化漏斗', badge: 'NEW' },
         { path: '/sales-funnel', label: '销售漏斗' },
         { path: '/client-grading', label: '客户分级' },
-        { path: '/tag-management', label: '标签管理' },
-        { path: '/follow-up-statistics', label: '跟进统计', badge: 'NEW' },
+        { path: '/tag-management', label: '客户标签' },
+        { path: '/lead-tags', label: '线索标签', badge: 'NEW' },
+        { path: '/follow-up-statistics', label: '跟进统计' },
       ],
     },
     {
@@ -70,6 +94,7 @@ const Layout = () => {
       key: 'call',
       submenu: [
         { path: '/calls', label: '外呼记录' },
+        { path: '/call-tasks', label: '外呼任务', badge: 'NEW' },
         { path: '/analytics/calls', label: '外呼分析' },
       ],
     },
@@ -201,6 +226,16 @@ const Layout = () => {
           </button>
 
           <div className="topbar-right">
+            <button
+              className="notification-bell"
+              onClick={() => setReminderVisible(true)}
+              title="跟进提醒"
+            >
+              <Bell size={20} />
+              {reminderCount > 0 && (
+                <span className="notification-badge">{reminderCount > 99 ? '99+' : reminderCount}</span>
+              )}
+            </button>
             <div className="user-menu">
               <button
                 className="user-menu-trigger"
@@ -233,6 +268,10 @@ const Layout = () => {
                     </div>
                   </div>
                   <div className="user-menu-divider"></div>
+                  <button className="user-menu-item" onClick={() => { setUserMenuOpen(false); navigate('/settings'); }}>
+                    <Settings size={16} />
+                    账户设置
+                  </button>
                   <button className="user-menu-item" onClick={handleLogout}>
                     <LogOut size={16} />
                     退出登录
@@ -256,6 +295,15 @@ const Layout = () => {
           onClick={() => setSidebarOpen(false)}
         ></div>
       )}
+
+      {/* 跟进提醒弹窗 */}
+      <FollowUpReminderModal
+        visible={reminderVisible}
+        onClose={() => {
+          setReminderVisible(false);
+          fetchReminderCount();
+        }}
+      />
     </div>
   );
 };

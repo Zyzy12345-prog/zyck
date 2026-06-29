@@ -1,56 +1,60 @@
 import { useState, useEffect } from 'react';
-import { callAPI, clientAPI } from '../services/api';
+import { callSystemAPI, clientAPI, customerLeadAPI } from '../services/api';
 import { X, Phone, Clock, Calendar, FileText, User, Building, Star, Tag, TrendingUp } from 'lucide-react';
 import './CallForm.css';
 
 const CallForm = ({ call, onSuccess, onCancel }) => {
   const [clients, setClients] = useState([]);
+  const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     clientId: '',
+    leadId: '',
     phoneNumber: '',
     callType: 'outbound',
-    direction: 'outbound',
     callTime: new Date().toISOString().slice(0, 16),
     durationMinutes: 0,
     durationSeconds: 0,
-    status: 'completed',
-    summary: '',
+    callStatus: 'connected',
+    content: '',
     notes: '',
     tags: [],
-    satisfaction: '',
-    followUpAction: '',
-    followUpDate: '',
+    customerSatisfaction: '',
+    nextAction: '',
+    nextCallDate: '',
   });
   const [tagInput, setTagInput] = useState('');
 
   useEffect(() => {
     if (call) {
-      const minutes = Math.floor(call.duration / 60);
-      const seconds = call.duration % 60;
-      
+      const minutes = Math.floor((call.duration || 0) / 60);
+      const seconds = (call.duration || 0) % 60;
+
       setFormData({
         clientId: call.clientId || '',
+        leadId: call.leadId || '',
         phoneNumber: call.phoneNumber || '',
         callType: call.callType || 'outbound',
-        direction: call.direction || 'outbound',
         callTime: call.callTime ? new Date(call.callTime).toISOString().slice(0, 16) : '',
         durationMinutes: minutes,
         durationSeconds: seconds,
-        status: call.status || 'completed',
-        summary: call.summary || '',
+        callStatus: call.callStatus || call.status || 'connected',
+        content: call.content || call.summary || '',
         notes: call.notes || '',
         tags: call.tags || [],
-        satisfaction: call.satisfaction || '',
-        followUpAction: call.followUpAction || '',
-        followUpDate: call.followUpDate ? new Date(call.followUpDate).toISOString().slice(0, 10) : '',
+        customerSatisfaction: call.customerSatisfaction || call.satisfaction || '',
+        nextAction: call.nextAction || call.followUpAction || '',
+        nextCallDate: call.nextCallDate || call.followUpDate
+          ? new Date(call.nextCallDate || call.followUpDate).toISOString().slice(0, 10)
+          : '',
       });
     }
   }, [call]);
 
   useEffect(() => {
     fetchClients();
+    fetchLeads();
   }, []);
 
   const fetchClients = async () => {
@@ -59,6 +63,15 @@ const CallForm = ({ call, onSuccess, onCancel }) => {
       setClients(response.data || []);
     } catch (error) {
       console.error('Failed to fetch clients:', error);
+    }
+  };
+
+  const fetchLeads = async () => {
+    try {
+      const response = await customerLeadAPI.getLeads({ limit: 500 });
+      setLeads(response.data || []);
+    } catch (error) {
+      console.error('Failed to fetch leads:', error);
     }
   };
 
@@ -111,8 +124,8 @@ const CallForm = ({ call, onSuccess, onCancel }) => {
   };
 
   const validateForm = () => {
-    if (!formData.clientId) {
-      setError('请选择客户');
+    if (!formData.clientId && !formData.leadId) {
+      setError('请选择客户或线索');
       return false;
     }
     if (!formData.phoneNumber) {
@@ -121,10 +134,6 @@ const CallForm = ({ call, onSuccess, onCancel }) => {
     }
     if (!formData.callTime) {
       setError('请选择呼叫时间');
-      return false;
-    }
-    if (!formData.status) {
-      setError('请选择呼叫状态');
       return false;
     }
     if (formData.durationMinutes < 0 || formData.durationSeconds < 0 || formData.durationSeconds >= 60) {
@@ -136,7 +145,7 @@ const CallForm = ({ call, onSuccess, onCancel }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -146,27 +155,27 @@ const CallForm = ({ call, onSuccess, onCancel }) => {
 
     try {
       const totalDuration = formData.durationMinutes * 60 + formData.durationSeconds;
-      
+
       const submitData = {
-        clientId: parseInt(formData.clientId),
+        clientId: formData.clientId ? parseInt(formData.clientId) : null,
+        leadId: formData.leadId ? parseInt(formData.leadId) : null,
         phoneNumber: formData.phoneNumber,
         callType: formData.callType,
-        direction: formData.direction,
         callTime: new Date(formData.callTime).toISOString(),
         duration: totalDuration,
-        status: formData.status,
-        summary: formData.summary,
+        callStatus: formData.callStatus,
+        content: formData.content,
         notes: formData.notes,
         tags: formData.tags,
-        satisfaction: formData.satisfaction ? parseInt(formData.satisfaction) : null,
-        followUpAction: formData.followUpAction || null,
-        followUpDate: formData.followUpDate ? new Date(formData.followUpDate).toISOString() : null,
+        customerSatisfaction: formData.customerSatisfaction || null,
+        nextAction: formData.nextAction || null,
+        nextCallDate: formData.nextCallDate ? new Date(formData.nextCallDate).toISOString() : null,
       };
 
       if (call) {
-        await callAPI.updateCall(call.id, submitData);
+        await callSystemAPI.updateCallRecord(call.id, submitData);
       } else {
-        await callAPI.createCall(submitData);
+        await callSystemAPI.createCallRecord(submitData);
       }
 
       onSuccess();
@@ -260,8 +269,8 @@ const CallForm = ({ call, onSuccess, onCancel }) => {
             </label>
             <select
               id="direction"
-              name="direction"
-              value={formData.direction}
+              name="callType"
+              value={formData.callType}
               onChange={handleChange}
               className="input"
             >
@@ -329,8 +338,8 @@ const CallForm = ({ call, onSuccess, onCancel }) => {
           </label>
           <select
             id="status"
-            name="status"
-            value={formData.status}
+            name="callStatus"
+            value={formData.callStatus}
             onChange={handleChange}
             className="input"
             required
@@ -352,8 +361,8 @@ const CallForm = ({ call, onSuccess, onCancel }) => {
           </label>
           <textarea
             id="summary"
-            name="summary"
-            value={formData.summary}
+            name="content"
+            value={formData.content}
             onChange={handleChange}
             className="input textarea"
             rows="3"
@@ -416,8 +425,8 @@ const CallForm = ({ call, onSuccess, onCancel }) => {
           </label>
           <select
             id="satisfaction"
-            name="satisfaction"
-            value={formData.satisfaction}
+            name="customerSatisfaction"
+            value={formData.customerSatisfaction}
             onChange={handleChange}
             className="input"
           >
@@ -438,8 +447,8 @@ const CallForm = ({ call, onSuccess, onCancel }) => {
           <input
             type="text"
             id="followUpAction"
-            name="followUpAction"
-            value={formData.followUpAction}
+            name="nextAction"
+            value={formData.nextAction}
             onChange={handleChange}
             className="input"
             placeholder="例如：下周发送产品资料"
@@ -454,8 +463,8 @@ const CallForm = ({ call, onSuccess, onCancel }) => {
           <input
             type="date"
             id="followUpDate"
-            name="followUpDate"
-            value={formData.followUpDate}
+            name="nextCallDate"
+            value={formData.nextCallDate}
             onChange={handleChange}
             className="input"
           />

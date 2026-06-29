@@ -150,3 +150,25 @@ exports.changePassword = async (req, res, next) => {
     next(error);
   }
 };
+
+// 更新个人资料
+exports.updateProfile = async (req, res, next) => {
+  try {
+    const { email, phone } = req.body;
+    const user = await User.findByPk(req.user.id);
+
+    const updates = {};
+    if (email !== undefined) updates.email = email;
+    if (phone !== undefined) updates.phone = phone;
+
+    await user.update(updates);
+
+    res.json({
+      success: true,
+      message: '个人资料已更新',
+      data: user
+    });
+  } catch (error) {
+    next(error);
+  }
+};

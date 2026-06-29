@@ -97,10 +97,13 @@ exports.getCommunicationRecords = async (req, res, next) => {
 };
 
 async function createMockRecord(req, record) {
-  return await CommunicationRecord.create({
-    ...record,
-    userId: req.user.id
-  });
+  // 如果 clientId 和 leadId 都为 null，不传这两个字段以避免 CHECK 约束冲突
+  const data = { ...record, userId: req.user.id };
+  if (data.clientId === null && data.leadId === null) {
+    delete data.clientId;
+    delete data.leadId;
+  }
+  return await CommunicationRecord.create(data);
 }
 
 exports.mockCall = async (req, res, next) => {

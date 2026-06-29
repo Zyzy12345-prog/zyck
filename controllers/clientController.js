@@ -1444,3 +1444,61 @@ exports.getCalendarData = async (req, res, next) => {
     next(error);
   }
 };
+
+// 导出客户列表为 Excel
+exports.exportClients = async (req, res, next) => {
+  try {
+    const { search, industryId, status, source } = req.query;
+    const where = {};
+
+    if (search) {
+      where[Op.or] = [
+        { companyName: { [Op.like]: `%${search}%` } },
+        { contactPerson: { [Op.like]: `%${search}%` } },
+        { phone: { [Op.like]: `%${search}%` } }
+      ];
+    }
+    if (industryId) where.industryId = industryId;
+    if (status) where.status = status;
+    if (source) where.source = source;
+
+    const clients = await Client.findAll({
+      where,
+      order: [['createdAt', 'DESC']],
+      include: [
+        { model: User, as: 'assignedTo', attributes: ['username'], required: false },
+        { model: IndustryCategory, as: 'industry', attributes: ['name'], required: false }
+      ]
+    });
+
+    const data = clients.map((c, i) => ({
+      '序号': i + 1,
+      '公司名称': c.companyName,
+      '联系人': c.contactPerson,
+      '电话': c.phone,
+      '邮箱': c.email,
+      '行业': c.industry?.name || '',
+      '来源': c.source || '',
+      '状态': c.status || '',
+      '负责人': c.assignedTo?.username || '',
+      '地址': c.address || '',
+      '创建时间': c.createdAt ? new Date(c.createdAt).toLocaleDateString('zh-CN') : ''
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    ws['!cols'] = [
+      { wch: 6 }, { wch: 25 }, { wch: 10 }, { wch: 15 }, { wch: 25 },
+      { wch: 15 }, { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 30 }, { wch: 12 }
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, '客户列表');
+    const buf = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', `attachment; filename=客户列表_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    res.send(buf);
+  } catch (error) {
+    next(error);
+  }
+};

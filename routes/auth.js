@@ -16,4 +16,7 @@ router.get('/me', authenticate, authController.getMe);
 // 修改密码（需要认证）
 router.put('/change-password', authenticate, authController.changePassword);
 
+// 更新个人资料（需要认证）
+router.put('/profile', authenticate, authController.updateProfile);
+
 module.exports = router;

@@ -10,7 +10,7 @@ module.exports = {
     // 插入测试员工数据
     await queryInterface.bulkInsert('employees', [
       {
-        employee_id: 'EMP001',
+        employee_no: 'EMP001',
         username: 'admin',
         password: hashedPassword,
         full_name: '系统管理员',
@@ -34,7 +34,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        employee_id: 'EMP002',
+        employee_no: 'EMP002',
         username: 'zhang_san',
         password: hashedPassword,
         full_name: '张三',
@@ -58,7 +58,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        employee_id: 'EMP003',
+        employee_no: 'EMP003',
         username: 'li_si',
         password: hashedPassword,
         full_name: '李四',
@@ -82,7 +82,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        employee_id: 'EMP004',
+        employee_no: 'EMP004',
         username: 'wang_wu',
         password: hashedPassword,
         full_name: '王五',
@@ -106,7 +106,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        employee_id: 'EMP005',
+        employee_no: 'EMP005',
         username: 'zhao_liu',
         password: hashedPassword,
         full_name: '赵六',
@@ -130,7 +130,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        employee_id: 'EMP006',
+        employee_no: 'EMP006',
         username: 'sun_qi',
         password: hashedPassword,
         full_name: '孙七',
@@ -154,7 +154,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        employee_id: 'EMP007',
+        employee_no: 'EMP007',
         username: 'zhou_ba',
         password: hashedPassword,
         full_name: '周八',
@@ -178,7 +178,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        employee_id: 'EMP008',
+        employee_no: 'EMP008',
         username: 'wu_jiu',
         password: hashedPassword,
         full_name: '吴九',
@@ -202,7 +202,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        employee_id: 'EMP009',
+        employee_no: 'EMP009',
         username: 'zheng_shi',
         password: hashedPassword,
         full_name: '郑十',
@@ -226,7 +226,7 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        employee_id: 'EMP010',
+        employee_no: 'EMP010',
         username: 'qian_shiyi',
         password: hashedPassword,
         full_name: '钱十一',

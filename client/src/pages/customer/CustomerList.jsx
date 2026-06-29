@@ -21,7 +21,8 @@ import {
   DeleteOutlined,
   ReloadOutlined,
   UserOutlined,
-  UploadOutlined
+  UploadOutlined,
+  ExportOutlined
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { clientAPI, industryAPI } from '../../services/api';
@@ -369,6 +370,17 @@ const CustomerList = () => {
               onClick={handleOpenImportModal}
             >
               导入
+            </Button>
+            <Button
+              icon={<ExportOutlined />}
+              onClick={() => {
+                const params = new URLSearchParams();
+                if (filters.search) params.append('search', filters.search);
+                if (filters.status) params.append('status', filters.status);
+                window.open(`/api/clients/export?${params.toString()}`, '_blank');
+              }}
+            >
+              导出
             </Button>
             <Button
               type="primary"

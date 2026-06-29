@@ -112,7 +112,9 @@ const CommunicationPanel = ({ visible, onClose, onSuccess, clientId, leadId, cli
       setFileList([]);
       onClose();
     } catch (error) {
-      message.error('保存失败：' + (error.message || '未知错误'));
+      const serverMsg = error?.response?.data?.message || error?.response?.data?.detail || '';
+      const fullMsg = serverMsg ? `保存失败：${serverMsg}` : `保存失败：${error.message || '未知错误'}`;
+      message.error(fullMsg);
     } finally {
       setLoading(false);
     }

@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Modal, Form, Input, Select, Button, Table, Tag, Space, 
-  message, Popconfirm, Card, Row, Col, Statistic 
+import {
+  Modal, Form, Input, Select, Button, Table, Tag, Space,
+  message, Popconfirm, Card, Row, Col, Statistic, Tooltip
 } from 'antd';
-import { 
-  PlusOutlined, EditOutlined, DeleteOutlined, TagOutlined 
+import {
+  PlusOutlined, EditOutlined, DeleteOutlined, TagOutlined,
+  TagsOutlined, CrownOutlined, SearchOutlined
 } from '@ant-design/icons';
 import { leadTagAPI } from '../services/api';
 import './LeadTagManager.css';
-
-const { Option } = Select;
 
 const LeadTagManager = ({ visible, onClose, onTagsChange }) => {
   const [form] = Form.useForm();
@@ -20,6 +19,7 @@ const LeadTagManager = ({ visible, onClose, onTagsChange }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [editingTag, setEditingTag] = useState(null);
   const [filters, setFilters] = useState({ category: '', search: '' });
+  const [selectedColor, setSelectedColor] = useState('#1890ff');
 
   useEffect(() => {
     if (visible) {
@@ -67,14 +67,22 @@ const LeadTagManager = ({ visible, onClose, onTagsChange }) => {
 
   const handleAdd = () => {
     setEditingTag(null);
+    setSelectedColor('#1890ff');
     form.resetFields();
-    form.setFieldsValue({ color: '#1890ff' });
+    form.setFieldsValue({ color: '#1890ff', sortOrder: 0 });
     setModalVisible(true);
   };
 
   const handleEdit = (record) => {
     setEditingTag(record);
-    form.setFieldsValue(record);
+    setSelectedColor(record.color || '#1890ff');
+    form.setFieldsValue({
+      name: record.name,
+      color: record.color,
+      category: record.category,
+      description: record.description,
+      sortOrder: record.sortOrder || 0
+    });
     setModalVisible(true);
   };
 
@@ -109,6 +117,7 @@ const LeadTagManager = ({ visible, onClose, onTagsChange }) => {
         form.resetFields();
         fetchTags();
         fetchStatistics();
+        fetchCategories();
         if (onTagsChange) onTagsChange();
       }
     } catch (error) {
@@ -120,18 +129,10 @@ const LeadTagManager = ({ visible, onClose, onTagsChange }) => {
     }
   };
 
-  const colorOptions = [
-    { value: '#f5222d', label: '红色' },
-    { value: '#fa541c', label: '橙红' },
-    { value: '#fa8c16', label: '橙色' },
-    { value: '#faad14', label: '金色' },
-    { value: '#52c41a', label: '绿色' },
-    { value: '#13c2c2', label: '青色' },
-    { value: '#1890ff', label: '蓝色' },
-    { value: '#2f54eb', label: '深蓝' },
-    { value: '#722ed1', label: '紫色' },
-    { value: '#eb2f96', label: '粉色' },
-    { value: '#8c8c8c', label: '灰色' }
+  const presetColors = [
+    '#f5222d', '#fa541c', '#fa8c16', '#faad14', '#fadb14',
+    '#a0d911', '#52c41a', '#13c2c2', '#1890ff', '#2f54eb',
+    '#722ed1', '#eb2f96', '#8c8c8c', '#595959', '#262626'
   ];
 
   const columns = [
@@ -139,30 +140,33 @@ const LeadTagManager = ({ visible, onClose, onTagsChange }) => {
       title: '标签名称',
       dataIndex: 'name',
       key: 'name',
+      width: 160,
       render: (name, record) => (
-        <Tag color={record.color}>{name}</Tag>
+        <Tag color={record.color} style={{ fontSize: 13, padding: '2px 8px' }}>
+          {record.isSystem && <CrownOutlined style={{ marginRight: 4 }} />}
+          {name}
+        </Tag>
       )
     },
     {
       title: '分类',
       dataIndex: 'category',
       key: 'category',
-      render: (category) => category || '-'
-    },
-    {
-      title: '描述',
-      dataIndex: 'description',
-      key: 'description',
-      ellipsis: true,
-      render: (desc) => desc || '-'
+      width: 100,
+      render: (category) => category ? <Tag>{category}</Tag> : '-'
     },
     {
       title: '使用次数',
       key: 'usage',
-      width: 100,
+      width: 90,
       render: (_, record) => {
         const stat = statistics.find(s => s.id === record.id);
-        return stat ? stat.lead_count : 0;
+        const count = stat ? stat.lead_count : 0;
+        return (
+          <Tooltip title={`${count} 条线索使用`}>
+            <Tag color={count > 0 ? 'blue' : 'default'}>{count}</Tag>
+          </Tooltip>
+        );
       }
     },
     {
@@ -171,7 +175,7 @@ const LeadTagManager = ({ visible, onClose, onTagsChange }) => {
       key: 'isSystem',
       width: 80,
       render: (isSystem) => (
-        <Tag color={isSystem ? 'blue' : 'default'}>
+        <Tag color={isSystem ? 'blue' : 'green'}>
           {isSystem ? '系统' : '自定义'}
         </Tag>
       )
@@ -179,10 +183,10 @@ const LeadTagManager = ({ visible, onClose, onTagsChange }) => {
     {
       title: '操作',
       key: 'action',
-      width: 150,
+      width: 140,
       fixed: 'right',
       render: (_, record) => (
-        <Space>
+        <Space size="small">
           <Button
             type="link"
             size="small"
@@ -194,16 +198,12 @@ const LeadTagManager = ({ visible, onClose, onTagsChange }) => {
           {!record.isSystem && (
             <Popconfirm
               title="确定删除此标签？"
+              description="删除后关联线索的标签也会被移除"
               onConfirm={() => handleDelete(record.id)}
               okText="确定"
               cancelText="取消"
             >
-              <Button
-                type="link"
-                size="small"
-                danger
-                icon={<DeleteOutlined />}
-              >
+              <Button type="link" size="small" danger icon={<DeleteOutlined />}>
                 删除
               </Button>
             </Popconfirm>
@@ -215,40 +215,67 @@ const LeadTagManager = ({ visible, onClose, onTagsChange }) => {
 
   return (
     <Modal
-      title="标签管理"
+      title={
+        <Space>
+          <TagsOutlined />
+          <span>线索标签管理</span>
+        </Space>
+      }
       open={visible}
       onCancel={onClose}
-      width={1000}
-      footer={null}
+      width={900}
+      footer={[
+        <Button key="close" onClick={onClose}>
+          关闭
+        </Button>,
+        <Button key="full" type="link" onClick={() => {
+          onClose();
+          window.location.href = '/lead-tags';
+        }}>
+          进入完整管理页面
+        </Button>
+      ]}
       destroyOnHidden
     >
       <div className="lead-tag-manager-container">
         {/* 统计信息 */}
-        <Row gutter={16} style={{ marginBottom: 16 }}>
-          <Col span={8}>
-            <Card>
+        <Row gutter={12} style={{ marginBottom: 16 }}>
+          <Col span={6}>
+            <Card size="small">
               <Statistic
                 title="总标签数"
                 value={tags.length}
                 prefix={<TagOutlined />}
+                valueStyle={{ fontSize: 20 }}
               />
             </Card>
           </Col>
-          <Col span={8}>
-            <Card>
+          <Col span={6}>
+            <Card size="small">
               <Statistic
                 title="系统标签"
                 value={tags.filter(t => t.isSystem).length}
-                valueStyle={{ color: '#1890ff' }}
+                prefix={<CrownOutlined />}
+                valueStyle={{ color: '#722ed1', fontSize: 20 }}
               />
             </Card>
           </Col>
-          <Col span={8}>
-            <Card>
+          <Col span={6}>
+            <Card size="small">
               <Statistic
                 title="自定义标签"
                 value={tags.filter(t => !t.isSystem).length}
-                valueStyle={{ color: '#52c41a' }}
+                prefix={<TagOutlined />}
+                valueStyle={{ color: '#52c41a', fontSize: 20 }}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card size="small">
+              <Statistic
+                title="分类数"
+                value={categories.length}
+                valueStyle={{ color: '#fa8c16', fontSize: 20 }}
               />
             </Card>
           </Col>
@@ -258,6 +285,7 @@ const LeadTagManager = ({ visible, onClose, onTagsChange }) => {
         <Space style={{ marginBottom: 16 }} wrap>
           <Input
             placeholder="搜索标签名称"
+            prefix={<SearchOutlined />}
             style={{ width: 200 }}
             value={filters.search}
             onChange={(e) => setFilters({ ...filters, search: e.target.value })}
@@ -266,21 +294,17 @@ const LeadTagManager = ({ visible, onClose, onTagsChange }) => {
           <Select
             placeholder="选择分类"
             style={{ width: 150 }}
-            value={filters.category}
-            onChange={(value) => setFilters({ ...filters, category: value })}
+            value={filters.category || undefined}
+            onChange={(value) => setFilters({ ...filters, category: value || '' })}
             allowClear
           >
             {categories.map(cat => (
-              <Option key={cat.category} value={cat.category}>
+              <Select.Option key={cat.category} value={cat.category}>
                 {cat.category} ({cat.count})
-              </Option>
+              </Select.Option>
             ))}
           </Select>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={handleAdd}
-          >
+          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
             新增标签
           </Button>
         </Space>
@@ -291,8 +315,9 @@ const LeadTagManager = ({ visible, onClose, onTagsChange }) => {
           dataSource={tags}
           rowKey="id"
           loading={loading}
-          pagination={{ pageSize: 10 }}
-          scroll={{ x: 800 }}
+          pagination={{ pageSize: 10, showTotal: (total) => `共 ${total} 条` }}
+          scroll={{ x: 600 }}
+          size="small"
         />
 
         {/* 新增/编辑模态框 */}
@@ -304,13 +329,12 @@ const LeadTagManager = ({ visible, onClose, onTagsChange }) => {
             setModalVisible(false);
             form.resetFields();
           }}
-          okText="确定"
+          okText="保存"
           cancelText="取消"
+          width={500}
+          destroyOnHidden
         >
-          <Form
-            form={form}
-            layout="vertical"
-          >
+          <Form form={form} layout="vertical" autoComplete="off">
             <Form.Item
               name="name"
               label="标签名称"
@@ -319,7 +343,7 @@ const LeadTagManager = ({ visible, onClose, onTagsChange }) => {
                 { max: 50, message: '标签名称不能超过50个字符' }
               ]}
             >
-              <Input placeholder="例如：高意向" />
+              <Input placeholder="例如：高意向客户" maxLength={50} showCount />
             </Form.Item>
 
             <Form.Item
@@ -327,34 +351,49 @@ const LeadTagManager = ({ visible, onClose, onTagsChange }) => {
               label="标签颜色"
               rules={[{ required: true, message: '请选择标签颜色' }]}
             >
-              <Select>
-                {colorOptions.map(opt => (
-                  <Option key={opt.value} value={opt.value}>
-                    <Tag color={opt.value}>{opt.label}</Tag>
-                  </Option>
+              <div>
+                <Space wrap style={{ marginBottom: 8 }}>
+                  {presetColors.map(color => (
+                    <div
+                      key={color}
+                      onClick={() => {
+                        setSelectedColor(color);
+                        form.setFieldsValue({ color });
+                      }}
+                      style={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: 4,
+                        backgroundColor: color,
+                        cursor: 'pointer',
+                        border: selectedColor === color ? '2px solid #000' : '2px solid transparent',
+                        transition: 'all 0.15s',
+                      }}
+                    />
+                  ))}
+                </Space>
+                <Form.Item name="color" noStyle>
+                  <Input placeholder="#1890ff" style={{ width: 140 }} />
+                </Form.Item>
+              </div>
+            </Form.Item>
+
+            <Form.Item name="category" label="标签分类">
+              <Select placeholder="选择或输入分类" allowClear showSearch mode="tags" maxCount={1}>
+                {categories.map(cat => (
+                  <Select.Option key={cat.category} value={cat.category}>
+                    {cat.category}
+                  </Select.Option>
                 ))}
               </Select>
             </Form.Item>
 
-            <Form.Item
-              name="category"
-              label="标签分类"
-            >
-              <Input placeholder="例如：意向、预算、角色等" />
-            </Form.Item>
-
-            <Form.Item
-              name="description"
-              label="标签描述"
-            >
-              <Input.TextArea rows={3} placeholder="描述此标签的用途..." />
-            </Form.Item>
-
-            <Form.Item
-              name="sortOrder"
-              label="排序顺序"
-            >
+            <Form.Item name="sortOrder" label="排序顺序">
               <Input type="number" placeholder="数字越小越靠前" />
+            </Form.Item>
+
+            <Form.Item name="description" label="标签描述">
+              <Input.TextArea rows={3} placeholder="描述此标签的用途..." maxLength={200} showCount />
             </Form.Item>
           </Form>
         </Modal>
@@ -364,13 +403,3 @@ const LeadTagManager = ({ visible, onClose, onTagsChange }) => {
 };
 
 export default LeadTagManager;
-
-
-
-
-
-
-
-
-
-

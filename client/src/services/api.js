@@ -34,7 +34,12 @@ api.interceptors.response.use(
       localStorage.removeItem('user');
       window.location.href = '/login';
     }
-    return Promise.reject(error.response?.data || error.message);
+    if (error.response?.data) {
+      const data = error.response.data;
+      const msg = data.detail || data.sql || data.message || error.message;
+      return Promise.reject({ ...data, message: msg });
+    }
+    return Promise.reject(error);
   }
 );
 
@@ -43,7 +48,8 @@ export const authAPI = {
   login: (credentials) => api.post('/auth/login', credentials),
   register: (userData) => api.post('/auth/register', userData),
   getCurrentUser: () => api.get('/auth/me'),
-  updatePassword: (data) => api.put('/auth/password', data),
+  updatePassword: (data) => api.put('/auth/change-password', data),
+  updateProfile: (data) => api.put('/auth/profile', data),
 };
 
 // 客户相关API
@@ -244,6 +250,25 @@ export const customerLeadAPI = {
   updateFollowUp: (id, data) => api.put(`/follow-ups/${id}`, data),
   deleteFollowUp: (id) => api.delete(`/follow-ups/${id}`),
   getPendingFollowUps: (params) => api.get('/follow-ups/pending', { params }),
+
+  // 评分相关
+  recalculateScore: (id) => api.post(`/leads/${id}/recalculate-score`),
+  batchRecalculateScores: () => api.post('/leads/batch-recalculate-scores'),
+  getScoringConfig: () => api.get('/leads/scoring-config'),
+  updateScoringConfig: (config) => api.put('/leads/scoring-config', config),
+
+  // 回收相关
+  checkReclaimable: (params) => api.get('/leads/reclaim-check', { params }),
+  batchReclaimLeads: (leadIds, reason) => api.post('/leads/batch-reclaim', { leadIds, reason }),
+  getReclaimRules: () => api.get('/leads/reclaim-rules'),
+  updateReclaimRules: (rules) => api.put('/leads/reclaim-rules', rules),
+
+  // 导入导出
+  exportLeads: (params) => api.get('/leads/export', { params, responseType: 'blob' }),
+  importLeads: (formData) => api.post('/leads/import', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  downloadTemplate: () => api.get('/leads/template', { responseType: 'blob' }),
 };
 
 // 线索标签相关API

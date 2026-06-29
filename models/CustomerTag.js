@@ -66,12 +66,9 @@ module.exports = (sequelize, DataTypes) => {
       otherKey: 'clientId',
       as: 'clients'
     });
-    CustomerTag.belongsToMany(models.CustomerLead, {
-      through: 'lead_tag_relations',
-      foreignKey: 'tagId',
-      otherKey: 'leadId',
-      as: 'leads'
-    });
+    // 注意：CustomerTag 通过 client_tag_relations 关联 Client
+    // LeadTag 通过 lead_tag_relations 关联 CustomerLead
+    // 两者使用不同的关联表，互不干扰
   };
 
   return CustomerTag;

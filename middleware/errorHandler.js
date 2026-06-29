@@ -53,7 +53,9 @@ const errorHandler = (err, req, res, next) => {
   res.status(err.status || 500).json({
     success: false,
     message: err.message || '服务器内部错误',
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    stack: err.stack,
+    detail: err.original?.detail || err.parent?.detail || null,
+    sql: err.sql || null
   });
 };
 

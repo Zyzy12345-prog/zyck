@@ -60,6 +60,9 @@ router.post('/assign', authorize('admin', 'manager'), clientController.assignCli
 // 导入客户（需要manager及以上权限）
 router.post('/import', authorize('admin', 'manager'), upload.single('file'), clientController.importClients);
 
+// 导出客户
+router.get('/export', clientController.exportClients);
+
 // ==================== 跟进记录路由 ====================
 
 // 获取客户跟进记录列表

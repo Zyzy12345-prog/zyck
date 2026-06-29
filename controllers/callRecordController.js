@@ -37,7 +37,7 @@ exports.createCallRecord = async (req, res, next) => {
       contactPerson,
       callStatus: callStatus || 'pending',
       callResult,
-      callTime: new Date(),
+      callTime: callTime || new Date(),
       startTime,
       endTime,
       duration: duration || 0,
@@ -62,6 +62,21 @@ exports.createCallRecord = async (req, res, next) => {
           currentAttempts: task.currentAttempts + 1
         });
       }
+    }
+
+    // 更新关联客户/线索的最后联系时间
+    if (clientId) {
+      const { Client } = require('../models');
+      await Client.update(
+        { updatedAt: new Date() },
+        { where: { id: clientId } }
+      );
+    }
+    if (leadId) {
+      await CustomerLead.update(
+        { lastContactTime: callTime || new Date() },
+        { where: { id: leadId } }
+      );
     }
 
     res.status(201).json({

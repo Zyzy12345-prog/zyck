@@ -26,6 +26,10 @@ async function startServer() {
     await sequelize.authenticate();
     console.log('✅ 数据库连接成功');
 
+    // 初始化回收规则（从数据库加载或使用默认规则）
+    const { initRules } = require('./services/leadReclaimService');
+    await initRules();
+
     // 同步数据库模型（开发环境）
     // 暂时禁用自动同步，使用迁移文件管理数据库结构
     // if (process.env.NODE_ENV === 'development') {

@@ -24,15 +24,16 @@ const initializeSocket = (server) => {
       }
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
-      
+      const userId = decoded.userId || decoded.employeeId || decoded.id;
+
       // 尝试从 User 表查找
-      let user = await User.findByPk(decoded.id, {
+      let user = await User.findByPk(userId, {
         attributes: ['id', 'username', 'email', 'role']
       }).catch(() => null);
 
       // 如果 User 表中没有，尝试从 Employee 表查找
       if (!user) {
-        const employee = await Employee.findByPk(decoded.id, {
+        const employee = await Employee.findByPk(userId, {
           attributes: ['id', 'name', 'email', 'position']
         }).catch(() => null);
         

@@ -266,13 +266,95 @@ a:hover {
   }
 }
 
-/* 响应式 */
+/* 响应式 - 移动端优化 */
 @media (max-width: 768px) {
   .container {
     padding: 0 16px;
   }
-  
+
   .card {
     padding: 16px;
+  }
+
+  /* 表格横向滚动 */
+  .ant-table {
+    font-size: 13px;
+  }
+
+  .ant-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 更大的触控目标 */
+  .ant-btn {
+    min-height: 36px;
+    min-width: 36px;
+    touch-action: manipulation;
+  }
+
+  .ant-btn-sm {
+    min-height: 30px;
+    min-width: 30px;
+  }
+
+  /* 表单全宽 */
+  .ant-form-item {
+    margin-bottom: 12px;
+  }
+
+  .ant-input,
+  .ant-select-selector,
+  .ant-picker {
+    font-size: 16px !important; /* 防止 iOS 缩放 */
+  }
+
+  /* 统计卡片堆叠 */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  /* 图表全宽 */
+  .charts-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Modal 全屏 */
+  .ant-modal {
+    max-width: calc(100vw - 24px) !important;
+    margin: 12px !important;
+  }
+
+  /* 隐藏桌面端元素 */
+  .desktop-only {
+    display: none !important;
+  }
+
+  /* 页面标题缩小 */
+  .page-title {
+    font-size: 20px !important;
+  }
+
+  .page-subtitle {
+    font-size: 13px !important;
+  }
+}
+
+/* 平板端 */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 移动端安全区域适配 */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .layout {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }

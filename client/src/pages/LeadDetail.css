@@ -1,0 +1,188 @@
+/* ==================== 线索详情页 ==================== */
+
+.lead-detail-page {
+  padding: 0;
+}
+
+/* 页面头部 */
+.lead-detail-page .page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 16px 20px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* 信息卡片 */
+.lead-detail-page .info-card {
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+}
+
+.lead-detail-page .info-card .ant-descriptions-item-label {
+  font-weight: 500;
+  width: 100px;
+}
+
+/* 统计迷你卡片 */
+.stat-mini-card {
+  border-radius: 10px;
+  border: 1px solid #f0f0f0;
+  transition: all 0.2s;
+}
+
+.stat-mini-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.stat-mini-card .ant-statistic-title {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+/* 跟进卡片 */
+.follow-up-card {
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+}
+
+/* 跟进时间线 */
+.follow-up-timeline {
+  padding: 8px 0;
+}
+
+.follow-up-timeline .ant-timeline-item {
+  padding-bottom: 20px;
+}
+
+.follow-up-timeline .ant-timeline-item-last {
+  padding-bottom: 0;
+}
+
+.timeline-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.timeline-item {
+  background: #fafafa;
+  border-radius: 10px;
+  padding: 16px;
+  margin-left: 8px;
+  border: 1px solid #f0f0f0;
+  transition: all 0.2s;
+}
+
+.timeline-item:hover {
+  background: #f5f5f5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.timeline-content {
+  padding-left: 4px;
+}
+
+.content-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  white-space: pre-wrap;
+  margin-bottom: 8px;
+}
+
+.next-plan {
+  background: #e6f7ff;
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.next-date {
+  color: #1890ff;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.follow-up-tags {
+  margin-top: 8px;
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+/* 评分面板 */
+.score-main {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.score-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.score-factor {
+  padding: 6px 0;
+}
+
+.factor-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.factor-label {
+  font-weight: 500;
+  font-size: 13px;
+  min-width: 56px;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .lead-detail-page .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .lead-detail-page .page-header h3 {
+    font-size: 18px;
+  }
+
+  .timeline-dot {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .timeline-item {
+    margin-left: 0;
+    padding: 12px;
+  }
+}

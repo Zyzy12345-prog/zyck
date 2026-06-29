@@ -170,7 +170,7 @@ async function createEmployeeTables() {
     // 6. 为现有员工分配默认角色
     console.log('🔧 检查员工角色分配...');
     const [empWithoutRole] = await sequelize.query(`
-      SELECT e.id, e.full_name 
+      SELECT e.id, e.name
       FROM employees e
       LEFT JOIN employee_roles er ON e.id = er."employeeId"
       WHERE er.id IS NULL
@@ -199,7 +199,7 @@ async function createEmployeeTables() {
               roleId: roleId
             }
           });
-          console.log(`  ✅ 为员工 ${emp.full_name} 分配角色`);
+          console.log(`  ✅ 为员工 ${emp.name} 分配角色`);
         }
       }
     } else {

@@ -298,13 +298,30 @@ exports.getPendingFollowUps = async (req, res, next) => {
     const { page = 1, limit = 10 } = req.query;
     const offset = (page - 1) * limit;
 
+    // 获取当前用户已分配的线索ID和当前用户创建的跟进记录
+    const userId = req.user.id;
+    const assignedLeadIds = await CustomerLead.findAll({
+      where: { assignedTo: userId },
+      attributes: ['id']
+    }).then(leads => leads.map(l => l.id));
+
+    const where = {
+      nextFollowUpDate: {
+        [Op.lte]: new Date()
+      }
+    };
+
+    // 非管理员只能看到自己相关的内容
+    if (req.user.role !== 'admin') {
+      where[Op.or] = [
+        { leadId: { [Op.in]: assignedLeadIds } },
+        { createdBy: userId }
+      ];
+    }
+
     // 查找有下次跟进计划且时间已到的记录
     const { count, rows } = await LeadFollowUp.findAndCountAll({
-      where: {
-        nextFollowUpDate: {
-          [Op.lte]: new Date()
-        }
-      },
+      where,
       limit: parseInt(limit),
       offset: parseInt(offset),
       order: [['nextFollowUpDate', 'ASC']],

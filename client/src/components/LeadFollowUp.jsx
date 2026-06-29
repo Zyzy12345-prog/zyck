@@ -68,7 +68,8 @@ const LeadFollowUp = ({ leadId, visible, onClose }) => {
     form.resetFields();
     form.setFieldsValue({
       followUpDate: dayjs(),
-      followUpType: 'phone'
+      followUpType: 'phone',
+      isImportant: false
     });
     setModalVisible(true);
   };
@@ -78,7 +79,8 @@ const LeadFollowUp = ({ leadId, visible, onClose }) => {
     form.setFieldsValue({
       ...record,
       followUpDate: dayjs(record.followUpDate),
-      nextFollowUpDate: record.nextFollowUpDate ? dayjs(record.nextFollowUpDate) : null
+      nextFollowUpDate: record.nextFollowUpDate ? dayjs(record.nextFollowUpDate) : null,
+      isImportant: record.isImportant || false
     });
     setModalVisible(true);
   };
@@ -396,6 +398,17 @@ const LeadFollowUp = ({ leadId, visible, onClose }) => {
               label="跟进时长（分钟）"
             >
               <Input type="number" placeholder="例如：30" />
+            </Form.Item>
+
+            <Form.Item
+              name="isImportant"
+              label="标记为重要"
+              valuePropName="value"
+            >
+              <Select>
+                <Option value={true}>⭐ 重要</Option>
+                <Option value={false}>普通</Option>
+              </Select>
             </Form.Item>
 
             <Form.Item

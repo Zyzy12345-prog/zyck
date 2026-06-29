@@ -11,7 +11,7 @@ module.exports = {
       },
       
       // 员工基本信息
-      employee_id: {
+      employee_no: {
         type: Sequelize.STRING(20),
         allowNull: false,
         unique: true,
@@ -150,9 +150,9 @@ module.exports = {
     });
 
     // 创建索引
-    await queryInterface.addIndex('employees', ['employee_id'], {
+    await queryInterface.addIndex('employees', ['employee_no'], {
       unique: true,
-      name: 'idx_employee_id'
+      name: 'idx_employee_no'
     });
 
     await queryInterface.addIndex('employees', ['username'], {
@@ -198,7 +198,7 @@ module.exports = {
 
   down: async (queryInterface, Sequelize) => {
     // 删除索引
-    await queryInterface.removeIndex('employees', 'idx_employee_id');
+    await queryInterface.removeIndex('employees', 'idx_employee_no');
     await queryInterface.removeIndex('employees', 'idx_username');
     await queryInterface.removeIndex('employees', 'idx_email');
     await queryInterface.removeIndex('employees', 'idx_status');

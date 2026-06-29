@@ -29,7 +29,7 @@ import {
   DeleteOutlined,
   BarChartOutlined
 } from '@ant-design/icons';
-import { callSystemAPI } from '../services/api';
+import { callSystemAPI, clientAPI, customerLeadAPI } from '../services/api';
 import dayjs from 'dayjs';
 import './CallRecords.css';
 
@@ -53,6 +53,8 @@ const CallRecords = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [editingRecord, setEditingRecord] = useState(null);
   const [form] = Form.useForm();
+  const [clients, setClients] = useState([]);
+  const [leads, setLeads] = useState([]);
 
   useEffect(() => {
     fetchRecords();
@@ -103,14 +105,27 @@ const CallRecords = () => {
     }
   };
 
+  const fetchClientsAndLeads = async () => {
+    try {
+      const [clientRes, leadRes] = await Promise.all([
+        clientAPI.getClients({ limit: 100 }),
+        customerLeadAPI.getLeads({ limit: 100 })
+      ]);
+      if (clientRes.success) setClients(clientRes.data || []);
+      if (leadRes.success) setLeads(leadRes.data || []);
+    } catch (e) { /* silent fail */ }
+  };
+
   const handleCreate = () => {
     setEditingRecord(null);
     form.resetFields();
+    fetchClientsAndLeads();
     setModalVisible(true);
   };
 
   const handleEdit = (record) => {
     setEditingRecord(record);
+    fetchClientsAndLeads();
     form.setFieldsValue({
       ...record,
       callTime: record.callTime ? dayjs(record.callTime) : null,
@@ -466,6 +481,55 @@ const CallRecords = () => {
             <Col span={12}>
               <Form.Item name="contactPerson" label="联系人">
                 <Input placeholder="请输入联系人" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="clientId" label="关联客户">
+                <Select
+                  placeholder="搜索并选择客户"
+                  showSearch
+                  allowClear
+                  optionFilterProp="label"
+                  onChange={(val) => {
+                    if (val && !form.getFieldValue('phoneNumber')) {
+                      const c = clients.find(c => c.id === val);
+                      if (c?.phone) form.setFieldValue('phoneNumber', c.phone);
+                      if (c?.contactPerson) form.setFieldValue('contactPerson', c.contactPerson);
+                    }
+                  }}
+                >
+                  {clients.map(c => (
+                    <Option key={c.id} value={c.id} label={`${c.companyName} ${c.phone || ''}`}>
+                      {c.companyName} {c.phone ? `(${c.phone})` : ''}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="leadId" label="关联线索">
+                <Select
+                  placeholder="搜索并选择线索"
+                  showSearch
+                  allowClear
+                  optionFilterProp="label"
+                  onChange={(val) => {
+                    if (val && !form.getFieldValue('phoneNumber')) {
+                      const l = leads.find(l => l.id === val);
+                      if (l?.phone) form.setFieldValue('phoneNumber', l.phone);
+                      if (l?.contactPerson) form.setFieldValue('contactPerson', l.contactPerson);
+                    }
+                  }}
+                >
+                  {leads.map(l => (
+                    <Option key={l.id} value={l.id} label={`${l.companyName} ${l.phone || ''}`}>
+                      {l.companyName} {l.phone ? `(${l.phone})` : ''}
+                    </Option>
+                  ))}
+                </Select>
               </Form.Item>
             </Col>
           </Row>

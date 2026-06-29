@@ -51,10 +51,27 @@ exports.getClientScore = async (req, res, next) => {
     });
 
     if (!score) {
-      return res.status(404).json({
-        success: false,
-        message: '客户评分不存在，请先计算评分'
-      });
+      // 自动计算评分
+      try {
+        const result = await clientScoringService.calculateClientScore(clientId);
+        const newScore = await ClientScore.findOne({
+          where: { clientId },
+          include: [{
+            model: Client,
+            as: 'client',
+            attributes: ['id', 'companyName', 'customerLevel']
+          }]
+        });
+        return res.json({
+          success: true,
+          data: newScore
+        });
+      } catch (calcError) {
+        return res.status(404).json({
+          success: false,
+          message: '客户评分不存在，自动计算失败'
+        });
+      }
     }
 
     res.json({

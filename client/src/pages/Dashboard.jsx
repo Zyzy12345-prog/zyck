@@ -26,6 +26,9 @@ import {
 } from 'recharts';
 import './Dashboard.css';
 
+const COLORS = ['var(--accent-primary)', 'var(--accent-secondary)', '#52c41a', '#faad14', '#f5222d', '#722ed1'];
+const STATUS_COLORS = { connected: '#52c41a', no_answer: '#faad14', busy: '#f5222d', rejected: '#ff4d4f', failed: '#8c8c8c', pending: '#1890ff' };
+
 const Dashboard = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -34,6 +37,7 @@ const Dashboard = () => {
     totalCalls: 0,
     totalUsers: 0,
     avgCallDuration: 0,
+    connectionRate: 0,
   });
   const [callStats, setCallStats] = useState(null);
   const [recentCalls, setRecentCalls] = useState([]);
@@ -45,25 +49,26 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      
-      // 获取统计数据
+
       const [clientsRes, callsRes, statsRes] = await Promise.all([
         clientAPI.getClients({ limit: 1 }),
         callAPI.getCalls({ limit: 10 }),
         callAPI.getStatistics(),
       ]);
 
+      const callData = statsRes.data || {};
+
       setStats({
         totalClients: clientsRes.pagination?.total || 0,
         totalCalls: callsRes.pagination?.total || 0,
         totalUsers: 0,
-        avgCallDuration: statsRes.data?.averageDuration || 0,
+        avgCallDuration: callData.averageDuration || 0,
+        connectionRate: callData.connectionRate || 0,
       });
 
-      setCallStats(statsRes.data);
+      setCallStats(callData);
       setRecentCalls(callsRes.data || []);
 
-      // 如果是管理员或经理，获取用户数量
       if (user.role === 'admin' || user.role === 'manager') {
         const usersRes = await userAPI.getUsers({ limit: 1 });
         setStats(prev => ({
@@ -78,13 +83,31 @@ const Dashboard = () => {
     }
   };
 
+  // 从真实API数据构建图表数据
+  const callTrendData = callStats?.dailyStats?.map(d => ({
+    date: d.date?.slice(5) || d.date,
+    calls: d.count || d.total || 0,
+  })) || [];
+
+  const callTypeData = callStats?.byType?.map(t => ({
+    name: t.callType === 'outbound' ? '呼出' : t.callType === 'inbound' ? '呼入' : t.callType === 'callback' ? '回拨' : t.callType,
+    value: parseInt(t.count) || 0,
+    color: COLORS[Math.floor(Math.random() * COLORS.length)],
+  })) || [];
+
+  const callResultData = callStats?.byStatus?.map(s => ({
+    result: { connected: '已接听', no_answer: '未接听', busy: '忙线', rejected: '拒接', failed: '失败', pending: '待处理' }[s.callStatus] || s.callStatus,
+    count: parseInt(s.count) || 0,
+    color: STATUS_COLORS[s.callStatus] || '#8c8c8c',
+  })) || [];
+
   const statCards = [
     {
       title: '客户总数',
       value: stats.totalClients,
       icon: Users,
       color: 'var(--accent-primary)',
-      change: '+12%',
+      change: `${stats.connectionRate}%`,
       trend: 'up',
     },
     {
@@ -92,48 +115,26 @@ const Dashboard = () => {
       value: stats.totalCalls,
       icon: Phone,
       color: 'var(--accent-secondary)',
-      change: '+8%',
-      trend: 'up',
+      change: stats.connectionRate > 50 ? '+↑' : '+→',
+      trend: stats.connectionRate > 50 ? 'up' : 'down',
     },
     {
       title: '平均通话时长',
-      value: `${Math.floor(stats.avgCallDuration / 60)}分钟`,
+      value: `${Math.floor(stats.avgCallDuration / 60)}分${stats.avgCallDuration % 60}秒`,
       icon: Clock,
       color: 'var(--success)',
-      change: '-3%',
-      trend: 'down',
+      change: `${stats.totalCalls > 0 ? '活跃' : '空闲'}`,
+      trend: 'up',
     },
     {
       title: '员工总数',
       value: stats.totalUsers,
       icon: TrendingUp,
       color: 'var(--warning)',
-      change: '+5%',
+      change: `在线`,
       trend: 'up',
       hidden: user.role !== 'admin' && user.role !== 'manager',
     },
-  ];
-
-  // 模拟图表数据
-  const callTrendData = [
-    { date: '1月', calls: 65 },
-    { date: '2月', calls: 78 },
-    { date: '3月', calls: 90 },
-    { date: '4月', calls: 81 },
-    { date: '5月', calls: 95 },
-    { date: '6月', calls: 112 },
-  ];
-
-  const callTypeData = [
-    { name: '呼出', value: 65, color: 'var(--accent-primary)' },
-    { name: '呼入', value: 35, color: 'var(--accent-secondary)' },
-  ];
-
-  const callResultData = [
-    { result: '已接听', count: 85 },
-    { result: '未接听', count: 25 },
-    { result: '忙线', count: 15 },
-    { result: '失败', count: 10 },
   ];
 
   if (loading) {
